@@ -1,0 +1,46 @@
+{
+  "name": "@cursorly/web-components",
+  "version": "0.0.1",
+  "description": "Cursorly web components",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/web-components/web-components.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ionic-team/stencil-component-starter.git"
+  },
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "start": "stencil build --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate"
+  },
+  "dependencies": {
+    "@stencil/core": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.11",
+    "babel-loader": "^8.3.0",
+    "jest": "^27.5.1",
+    "jest-cli": "^27.5.1",
+    "lit-html": "^2.7.0",
+    "puppeteer": "^19.5.2"
+  },
+  "volta": {
+    "node": "16.15.1",
+    "yarn": "1.22.19"
+  },
+  "license": "MIT"
+}

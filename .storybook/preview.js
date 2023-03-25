@@ -1,4 +1,4 @@
-import {defineCustomElements} from '../dist/esm/loader';
+import {defineCustomElements} from '../packages/web-components/dist/esm/loader';
 
 defineCustomElements();
 
