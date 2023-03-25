@@ -12,16 +12,21 @@
   ],
   "scripts": {
     "start": "lerna run start",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 --no-open",
+    "generate": "lerna run generate --scope @cursorly/web-components",
     "build-storybook": "build-storybook"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-docs": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-links": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
     "@storybook/builder-webpack4": "^6.5.16",
     "@storybook/html": "^6.5.16",
     "@storybook/manager-webpack4": "^6.5.16",
-    "lerna": "^6.6.1"
+    "cirrus-ui": "^0.7.1",
+    "lerna": "^6.6.1",
+    "storybook-addon-themes": "^6.1.0"
   }
 }

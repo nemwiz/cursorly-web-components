@@ -1,4 +1,5 @@
 import {defineCustomElements} from '../packages/web-components/dist/esm/loader';
+import 'cirrus-ui';
 
 defineCustomElements();
 

@@ -1,0 +1,14 @@
+import {Meta, Source, Story} from '@storybook/addon-docs';
+import Props from './readme.md'
+
+<Meta title="Components/Settings"/>
+
+<Props/>
+
+export const SettingsComponent = (args) => `<settings-component></settings-component>`;
+
+## Settings
+
+<Story name="Settings">
+  {SettingsComponent.bind({})}
+</Story>

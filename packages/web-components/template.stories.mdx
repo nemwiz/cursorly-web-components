@@ -1,0 +1,14 @@
+import {Meta, Source, Story} from '@storybook/addon-docs';
+import Props from './readme.md'
+
+<Meta title="Components/%NAME%"/>
+
+<Props/>
+
+export const %NAME%Component = (args) => `<%name%></%name%>`;
+
+## %NAME%
+
+<Story name="%NAME%">
+  {%NAME%Component.bind({})}
+</Story>
