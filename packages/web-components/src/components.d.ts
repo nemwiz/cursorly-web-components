@@ -6,10 +6,22 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface CameraSelectionComponent {
+    }
     interface SettingsComponent {
     }
 }
+export interface CameraSelectionComponentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCameraSelectionComponentElement;
+}
 declare global {
+    interface HTMLCameraSelectionComponentElement extends Components.CameraSelectionComponent, HTMLStencilElement {
+    }
+    var HTMLCameraSelectionComponentElement: {
+        prototype: HTMLCameraSelectionComponentElement;
+        new (): HTMLCameraSelectionComponentElement;
+    };
     interface HTMLSettingsComponentElement extends Components.SettingsComponent, HTMLStencilElement {
     }
     var HTMLSettingsComponentElement: {
@@ -17,13 +29,21 @@ declare global {
         new (): HTMLSettingsComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "camera-selection-component": HTMLCameraSelectionComponentElement;
         "settings-component": HTMLSettingsComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface CameraSelectionComponent {
+        /**
+          * When a camera gets selected from the dropdown, this event emits [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)
+         */
+        "onCameraSelected"?: (event: CameraSelectionComponentCustomEvent<MediaDeviceInfo>) => void;
+    }
     interface SettingsComponent {
     }
     interface IntrinsicElements {
+        "camera-selection-component": CameraSelectionComponent;
         "settings-component": SettingsComponent;
     }
 }
@@ -31,6 +51,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "camera-selection-component": LocalJSX.CameraSelectionComponent & JSXBase.HTMLAttributes<HTMLCameraSelectionComponentElement>;
             "settings-component": LocalJSX.SettingsComponent & JSXBase.HTMLAttributes<HTMLSettingsComponentElement>;
         }
     }

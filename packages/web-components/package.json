@@ -26,7 +26,10 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "^3.0.0"
+    "@stencil/core": "^3.0.0",
+    "@mediapipe/tasks-vision": "0.1.0-alpha-5",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/hands": "^0.4.1675469240"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",

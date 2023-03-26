@@ -1,4 +1,4 @@
-# settings-component
+# settings-two
 
 
 
@@ -14,8 +14,8 @@
 ### Graph
 ```mermaid
 graph TD;
-  settings-component --> camera-selection-component
-  style settings-component fill:#f9f,stroke:#333,stroke-width:4px
+  settings-two --> camera-selection-component
+  style settings-two fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

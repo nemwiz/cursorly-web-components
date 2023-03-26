@@ -1,0 +1,12 @@
+import {Meta, Story} from '@storybook/addon-docs';
+
+<Meta title="Dashboard"/>
+
+export const CursorlyDashboard = (args) => `<div>
+<settings-component></settings-component>
+<!--<camera-selection-component></camera-selection-component>-->
+</div>`;
+
+<Story name="Cursorly dashboard">
+  {CursorlyDashboard.bind({})}
+</Story>

@@ -1,5 +1,5 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { SettingsComponent } from '../settings-component';
+import {newSpecPage} from '@stencil/core/testing';
+import {SettingsComponent} from './settings-component';
 
 describe('settings-component', () => {
   it('renders', async () => {

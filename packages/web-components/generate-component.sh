@@ -1,5 +1,3 @@
-COMPONENT_NAME=$1
-
 yarn generate $1
 
 mv src/components/$1/test/$1.spec.tsx src/components/$1/
