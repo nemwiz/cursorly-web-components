@@ -2,10 +2,10 @@ import {Component, Event, EventEmitter, h, State} from '@stencil/core';
 import {getDevices} from '../../utils/camera';
 
 @Component({
-  tag: 'camera-selection-component',
+  tag: 'camera-selection',
   shadow: false,
 })
-export class CameraSelectionComponent {
+export class CameraSelection {
 
   /**
    * When a camera gets selected from the dropdown, this event emits [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)

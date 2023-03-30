@@ -5,22 +5,36 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Screen } from "./model/screen";
+export { Screen } from "./model/screen";
 export namespace Components {
-    interface CameraSelectionComponent {
+    interface CameraSelection {
+    }
+    interface ScreenSelection {
     }
     interface SettingsComponent {
     }
 }
-export interface CameraSelectionComponentCustomEvent<T> extends CustomEvent<T> {
+export interface CameraSelectionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLCameraSelectionComponentElement;
+    target: HTMLCameraSelectionElement;
+}
+export interface ScreenSelectionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLScreenSelectionElement;
 }
 declare global {
-    interface HTMLCameraSelectionComponentElement extends Components.CameraSelectionComponent, HTMLStencilElement {
+    interface HTMLCameraSelectionElement extends Components.CameraSelection, HTMLStencilElement {
     }
-    var HTMLCameraSelectionComponentElement: {
-        prototype: HTMLCameraSelectionComponentElement;
-        new (): HTMLCameraSelectionComponentElement;
+    var HTMLCameraSelectionElement: {
+        prototype: HTMLCameraSelectionElement;
+        new (): HTMLCameraSelectionElement;
+    };
+    interface HTMLScreenSelectionElement extends Components.ScreenSelection, HTMLStencilElement {
+    }
+    var HTMLScreenSelectionElement: {
+        prototype: HTMLScreenSelectionElement;
+        new (): HTMLScreenSelectionElement;
     };
     interface HTMLSettingsComponentElement extends Components.SettingsComponent, HTMLStencilElement {
     }
@@ -29,21 +43,29 @@ declare global {
         new (): HTMLSettingsComponentElement;
     };
     interface HTMLElementTagNameMap {
-        "camera-selection-component": HTMLCameraSelectionComponentElement;
+        "camera-selection": HTMLCameraSelectionElement;
+        "screen-selection": HTMLScreenSelectionElement;
         "settings-component": HTMLSettingsComponentElement;
     }
 }
 declare namespace LocalJSX {
-    interface CameraSelectionComponent {
+    interface CameraSelection {
         /**
           * When a camera gets selected from the dropdown, this event emits [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)
          */
-        "onCameraSelected"?: (event: CameraSelectionComponentCustomEvent<MediaDeviceInfo>) => void;
+        "onCameraSelected"?: (event: CameraSelectionCustomEvent<MediaDeviceInfo>) => void;
+    }
+    interface ScreenSelection {
+        /**
+          * When a screen gets selected from the dropdown, this event emits selected screen information
+         */
+        "onScreenSelected"?: (event: ScreenSelectionCustomEvent<Screen>) => void;
     }
     interface SettingsComponent {
     }
     interface IntrinsicElements {
-        "camera-selection-component": CameraSelectionComponent;
+        "camera-selection": CameraSelection;
+        "screen-selection": ScreenSelection;
         "settings-component": SettingsComponent;
     }
 }
@@ -51,7 +73,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "camera-selection-component": LocalJSX.CameraSelectionComponent & JSXBase.HTMLAttributes<HTMLCameraSelectionComponentElement>;
+            "camera-selection": LocalJSX.CameraSelection & JSXBase.HTMLAttributes<HTMLCameraSelectionElement>;
+            "screen-selection": LocalJSX.ScreenSelection & JSXBase.HTMLAttributes<HTMLScreenSelectionElement>;
             "settings-component": LocalJSX.SettingsComponent & JSXBase.HTMLAttributes<HTMLSettingsComponentElement>;
         }
     }

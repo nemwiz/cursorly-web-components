@@ -9,12 +9,14 @@
 
 ### Depends on
 
-- [camera-selection-component](../camera-selection-component)
+- [camera-selection](../camera-selection)
+- [screen-selection](../screen-selection)
 
 ### Graph
 ```mermaid
 graph TD;
-  settings-component --> camera-selection-component
+  settings-component --> camera-selection
+  settings-component --> screen-selection
   style settings-component fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

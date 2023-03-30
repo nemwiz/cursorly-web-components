@@ -21,8 +21,8 @@
 ### Graph
 ```mermaid
 graph TD;
-  settings-component --> camera-selection-component
-  style camera-selection-component fill:#f9f,stroke:#333,stroke-width:4px
+  settings-component --> camera-selection
+  style camera-selection fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

@@ -1,14 +1,21 @@
 import {Component, h} from '@stencil/core';
-import {createRecognizer} from '../../utils/mediapipe';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {stopCameraStream} from '../../utils/camera';
-import {GestureRecognizer} from '@mediapipe/tasks-vision';
 import {drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils';
 import {HAND_CONNECTIONS} from '@mediapipe/hands';
+import {Screen} from '../../model/screen';
+import {post} from '../../service/http.service';
+import {CreateSettingsRequest} from '../../model/settings';
+import {createGestureRecognizer, detect} from './detection.worker';
 
 const VIDEO_HEIGHT = "360px";
 const VIDEO_WIDTH = "480px";
+
+// let canvasX;
+// let canvasY;
+// let canvasWidth;
+// let canvasHeight;
 
 declare global {
   interface Window {
@@ -19,11 +26,6 @@ declare global {
 }
 
 function startCamera() {
-
-  if (!this.gestureRecognizer) {
-    alert("Please wait for gestureRecognizer to load");
-    return;
-  }
 
   const userMediaOptions = {
     video: {
@@ -44,8 +46,8 @@ function startCamera() {
 }
 
 async function detectGesture() {
-  let nowInMs = Date.now();
-  const results = this.gestureRecognizer.recognizeForVideo(this.webcam, nowInMs);
+  const bitmap = await createImageBitmap(this.webcam);
+  const results = await detect(bitmap);
 
   this.canvasContext.save();
   this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -63,6 +65,23 @@ async function detectGesture() {
       });
       window.drawLandmarks(this.canvasContext, landmarks, {color: "#FF0000", lineWidth: 2});
     }
+
+    if (this.isSocketOpen) {
+      this.socket.send(JSON.stringify({
+        landmarks: results.landmarks,
+        gestures: results.gestures,
+        handedness: results.handednesses,
+        frame: {
+          width: this.canvas.width,
+          height: this.canvas.height
+        }
+      }));
+    }
+
+    // if (this.isTouchpadBox) {
+    //     this.canvasContext.strokeRect(canvasX, canvasY, canvasWidth, canvasHeight);
+    // }
+
   }
 
   this.canvasContext.restore();
@@ -78,19 +97,81 @@ async function detectGesture() {
 export class SettingsComponent {
 
   selectedCamera: MediaDeviceInfo;
+  selectedScreen: Screen;
+  socket: WebSocket;
+  isSocketOpen: boolean = false;
+  isTouchpadBox: boolean = false;
   webcam!: HTMLVideoElement;
   canvas!: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
-  gestureRecognizer: GestureRecognizer;
   currentVideoStream: MediaStream;
 
   async componentDidLoad() {
-    this.gestureRecognizer = await createRecognizer();
-    await this.gestureRecognizer.setOptions({runningMode: 'VIDEO'});
+    await createGestureRecognizer();
     this.webcam = document.getElementById("webcam") as HTMLVideoElement;
     this.canvas = document.getElementById("output_canvas") as HTMLCanvasElement;
     this.canvasContext = this.canvas.getContext("2d");
     startCamera.apply(this);
+
+
+    this.socket = new WebSocket('ws://localhost:8765');
+
+    this.socket.addEventListener('open', () => {
+
+      console.log('Socket connection is open');
+      this.isSocketOpen = true;
+
+    });
+
+    this.socket.addEventListener('close', () => {
+
+      console.log('Socket connection has closed')
+
+      this.isSocketOpen = false;
+    });
+
+    this.socket.addEventListener('error', () => {
+
+      console.log('Socket connection has an error')
+      this.isSocketOpen = false;
+
+    });
+
+    this.socket.addEventListener('message', (event: MessageEvent) => {
+
+      const touchpadBox = JSON.parse(event.data);
+      this.canvasContext.strokeStyle = "green";
+      console.log(touchpadBox[0], typeof touchpadBox[0],)
+      // canvasCtx.fillRect(0, 0, 20, 20)
+      this.isTouchpadBox = true
+      const canvasX = touchpadBox[0]
+      const canvasY = touchpadBox[1]
+      const canvasWidth = touchpadBox[2] - touchpadBox[0]
+      const canvasHeight = touchpadBox[3] - touchpadBox[1]
+      console.log(canvasX, canvasY, canvasWidth, canvasHeight)
+      this.canvasContext.strokeRect(canvasX, canvasY, canvasWidth, canvasHeight);
+    });
+  }
+
+  async setSettings() {
+    const settings = {
+      airTouchpad: {
+        screenId: this.selectedScreen.screenId,
+        isSingleScreen: true
+      },
+      noseTouchpad: {
+        screenId: this.selectedScreen.screenId,
+        isSingleScreen: true
+      },
+      notifications: true
+    }
+
+    await post<void, CreateSettingsRequest>('http://localhost:39459/settings', settings);
+
+  }
+
+  disconnectedCallback() {
+    this.currentVideoStream.getTracks().forEach(track => track.stop());
   }
 
   render() {
@@ -101,10 +182,23 @@ export class SettingsComponent {
           <canvas class="output_canvas" id="output_canvas" width="1280" height="720"
                   style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
         </div>
-        <camera-selection-component onCameraSelected={(event) => {
+        <camera-selection onCameraSelected={(event) => {
           this.selectedCamera = event.detail;
         }
-        }></camera-selection-component>
+        }></camera-selection>
+        <screen-selection onScreenSelected={async (event) => {
+          this.selectedScreen = event.detail;
+          await this.setSettings();
+        }
+        }></screen-selection>
+
+
+        <button onClick={async () => {
+          await post<void, {}>('http://localhost:39459/modes/stop', {});
+          this.currentVideoStream.getTracks().forEach(s => s.stop());
+        }}>Stop
+        </button>
+
       </div>
     );
   }
