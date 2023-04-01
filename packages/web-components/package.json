@@ -41,9 +41,5 @@
     "lit-html": "^2.7.0",
     "puppeteer": "^19.5.2"
   },
-  "volta": {
-    "node": "16.15.1",
-    "yarn": "1.22.19"
-  },
   "license": "MIT"
 }

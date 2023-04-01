@@ -1,9 +1,9 @@
-import {Meta, Source, Story} from '@storybook/addon-docs';
-import Props from './readme.md'
+import {Markdown, Meta, Story} from '@storybook/blocks';
+import Props from './readme.md?raw'
 
 <Meta title="Components/CameraSelection"/>
 
-<Props/>
+<Markdown>{Props}</Markdown>
 
 export const CameraSelection = (args) => `<camera-selection></camera-selection>`;
 
