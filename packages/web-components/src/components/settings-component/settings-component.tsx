@@ -8,14 +8,12 @@ import {Screen} from '../../model/screen';
 import {post} from '../../service/http.service';
 import {CreateSettingsRequest} from '../../model/settings';
 import {createGestureRecognizer, detect} from './detection.worker';
+import {TouchpadBoxEvent, WebsocketEvents, WebsocketMessageEvent} from '../../model/websocket-message-event';
+import {processEvent} from '../../utils/websocket';
+import {TouchpadBox} from '../../model/touchpad-box';
 
-const VIDEO_HEIGHT = "360px";
-const VIDEO_WIDTH = "480px";
-
-// let canvasX;
-// let canvasY;
-// let canvasWidth;
-// let canvasHeight;
+const VIDEO_HEIGHT = '360px';
+const VIDEO_WIDTH = '480px';
 
 declare global {
   interface Window {
@@ -35,7 +33,7 @@ function startCamera() {
 
   navigator.mediaDevices.getUserMedia(userMediaOptions).then((stream) => {
     this.webcam.srcObject = stream;
-    this.webcam.addEventListener("loadeddata", detectGesture.bind(this));
+    this.webcam.addEventListener('loadeddata', detectGesture.bind(this));
 
     if (typeof this.currentVideoStream !== 'undefined') {
       stopCameraStream(this.currentVideoStream);
@@ -60,10 +58,10 @@ async function detectGesture() {
   if (results.landmarks) {
     for (const landmarks of results.landmarks) {
       window.drawConnectors(this.canvasContext, landmarks, window.HAND_CONNECTIONS, {
-        color: "#00FF00",
+        color: '#00FF00',
         lineWidth: 5
       });
-      window.drawLandmarks(this.canvasContext, landmarks, {color: "#FF0000", lineWidth: 2});
+      window.drawLandmarks(this.canvasContext, landmarks, {color: '#FF0000', lineWidth: 2});
     }
 
     if (this.isSocketOpen) {
@@ -78,16 +76,22 @@ async function detectGesture() {
       }));
     }
 
-    // if (this.isTouchpadBox) {
-    //     this.canvasContext.strokeRect(canvasX, canvasY, canvasWidth, canvasHeight);
-    // }
-
   }
 
   this.canvasContext.restore();
 
   // Call this function again to keep predicting when the browser is ready.
   window.requestAnimationFrame(detectGesture.bind(this));
+}
+
+function drawTouchpadBox() {
+
+  this.canvasContext.strokeStyle = '#ff9800';
+  this.canvasContext.lineWidth = 12;
+  this.isTouchpadBox = true
+  this.canvasContext.strokeRect(this.touchpadBox.x, this.touchpadBox.y, this.touchpadBox.width, this.touchpadBox.height);
+
+  window.requestAnimationFrame(drawTouchpadBox.bind(this));
 }
 
 @Component({
@@ -105,12 +109,18 @@ export class SettingsComponent {
   canvas!: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
   currentVideoStream: MediaStream;
+  touchpadBox: TouchpadBox = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+  }
 
   async componentDidLoad() {
     await createGestureRecognizer();
-    this.webcam = document.getElementById("webcam") as HTMLVideoElement;
-    this.canvas = document.getElementById("output_canvas") as HTMLCanvasElement;
-    this.canvasContext = this.canvas.getContext("2d");
+    this.webcam = document.getElementById('webcam') as HTMLVideoElement;
+    this.canvas = document.getElementById('output_canvas') as HTMLCanvasElement;
+    this.canvasContext = this.canvas.getContext('2d');
     startCamera.apply(this);
 
 
@@ -139,17 +149,18 @@ export class SettingsComponent {
 
     this.socket.addEventListener('message', (event: MessageEvent) => {
 
-      const touchpadBox = JSON.parse(event.data);
-      this.canvasContext.strokeStyle = "green";
-      console.log(touchpadBox[0], typeof touchpadBox[0],)
-      // canvasCtx.fillRect(0, 0, 20, 20)
-      this.isTouchpadBox = true
-      const canvasX = touchpadBox[0]
-      const canvasY = touchpadBox[1]
-      const canvasWidth = touchpadBox[2] - touchpadBox[0]
-      const canvasHeight = touchpadBox[3] - touchpadBox[1]
-      console.log(canvasX, canvasY, canvasWidth, canvasHeight)
-      this.canvasContext.strokeRect(canvasX, canvasY, canvasWidth, canvasHeight);
+      const websocketEvent = processEvent<WebsocketMessageEvent<TouchpadBoxEvent>>(event);
+
+      if (websocketEvent.name === WebsocketEvents.TOUCHPAD_BOX) {
+        const {xMin, yMin, width, height} = websocketEvent.data;
+        this.touchpadBox = {
+          x: xMin,
+          y: yMin,
+          width,
+          height
+        }
+        drawTouchpadBox.apply(this);
+      }
     });
   }
 
@@ -167,7 +178,6 @@ export class SettingsComponent {
     }
 
     await post<void, CreateSettingsRequest>('http://localhost:39459/settings', settings);
-
   }
 
   disconnectedCallback() {
@@ -178,8 +188,8 @@ export class SettingsComponent {
     return (
       <div>
         <div style={{position: 'relative'}}>
-          <video id="webcam" autoPlay playsInline></video>
-          <canvas class="output_canvas" id="output_canvas" width="1280" height="720"
+          <video id='webcam' autoPlay playsInline></video>
+          <canvas class='output_canvas' id='output_canvas' width='1280' height='720'
                   style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
         </div>
         <camera-selection onCameraSelected={(event) => {
