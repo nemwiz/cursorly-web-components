@@ -8,8 +8,7 @@ import {Screen} from '../../model/screen';
 import {post} from '../../service/http.service';
 import {CreateSettingsRequest} from '../../model/settings';
 import {createGestureRecognizer, detect} from './detection.worker';
-import {TouchpadBoxEvent, WebsocketEvents, WebsocketMessageEvent} from '../../model/websocket-message-event';
-import {processEvent} from '../../utils/websocket';
+import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
 
 const VIDEO_HEIGHT = '360px';
@@ -55,7 +54,9 @@ async function detectGesture() {
   this.canvas.style.width = VIDEO_WIDTH;
   this.webcam.style.width = VIDEO_WIDTH;
 
-  if (results.landmarks) {
+  this.drawTouchpadBox();
+
+  if (results.landmarks && results.landmarks.length !== 0) {
     for (const landmarks of results.landmarks) {
       window.drawConnectors(this.canvasContext, landmarks, window.HAND_CONNECTIONS, {
         color: '#00FF00',
@@ -84,16 +85,6 @@ async function detectGesture() {
   window.requestAnimationFrame(detectGesture.bind(this));
 }
 
-function drawTouchpadBox() {
-
-  this.canvasContext.strokeStyle = '#ff9800';
-  this.canvasContext.lineWidth = 12;
-  this.isTouchpadBox = true
-  this.canvasContext.strokeRect(this.touchpadBox.x, this.touchpadBox.y, this.touchpadBox.width, this.touchpadBox.height);
-
-  window.requestAnimationFrame(drawTouchpadBox.bind(this));
-}
-
 @Component({
   tag: 'settings-component',
   shadow: false,
@@ -104,16 +95,24 @@ export class SettingsComponent {
   selectedScreen: Screen;
   socket: WebSocket;
   isSocketOpen: boolean = false;
-  isTouchpadBox: boolean = false;
   webcam!: HTMLVideoElement;
   canvas!: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
   currentVideoStream: MediaStream;
+  isTouchpadBoxOpen: boolean = false;
   touchpadBox: TouchpadBox = {
     x: 0,
     y: 0,
     width: 0,
     height: 0
+  }
+
+  drawTouchpadBox() {
+    if (this.isTouchpadBoxOpen) {
+      this.canvasContext.strokeStyle = '#ff9800';
+      this.canvasContext.lineWidth = 12;
+      this.canvasContext.strokeRect(this.touchpadBox.x, this.touchpadBox.y, this.touchpadBox.width, this.touchpadBox.height);
+    }
   }
 
   async componentDidLoad() {
@@ -149,18 +148,24 @@ export class SettingsComponent {
 
     this.socket.addEventListener('message', (event: MessageEvent) => {
 
-      const websocketEvent = processEvent<WebsocketMessageEvent<TouchpadBoxEvent>>(event);
+      const websocketEvent = JSON.parse(event.data) as WebsocketEvent;
 
-      if (websocketEvent.name === WebsocketEvents.TOUCHPAD_BOX) {
-        const {xMin, yMin, width, height} = websocketEvent.data;
-        this.touchpadBox = {
-          x: xMin,
-          y: yMin,
-          width,
-          height
-        }
-        drawTouchpadBox.apply(this);
+      switch (websocketEvent.name) {
+        case WebsocketEvents.TOUCHPAD_BOX_OPEN:
+          const {xMin, yMin, width, height} = websocketEvent.data;
+          this.touchpadBox = {
+            x: xMin,
+            y: yMin,
+            width,
+            height
+          }
+          this.isTouchpadBoxOpen = true
+          break;
+        case WebsocketEvents.TOUCHPAD_BOX_CLOSE:
+          this.isTouchpadBoxOpen = false;
+          break;
       }
+
     });
   }
 

@@ -1,13 +1,14 @@
 export enum WebsocketEvents {
-  TOUCHPAD_BOX = 'TOUCHPAD-BOX'
+  TOUCHPAD_BOX_OPEN = 'TOUCHPAD-BOX-OPEN',
+  TOUCHPAD_BOX_CLOSE = 'TOUCHPAD-BOX-CLOSE'
 }
 
-export interface WebsocketMessageEvent<T> {
-  name: WebsocketEvents;
+export interface WebsocketMessageEvent<K, T> {
+  name: K;
   data: T;
 }
 
-export interface TouchpadBoxEvent {
+export interface TouchpadBoxOpenEvent {
   xMin: number;
   xMax: number;
   width: number;
@@ -15,3 +16,7 @@ export interface TouchpadBoxEvent {
   yMax: number;
   height: number;
 }
+
+export type WebsocketEvent =
+  WebsocketMessageEvent<WebsocketEvents.TOUCHPAD_BOX_OPEN, TouchpadBoxOpenEvent> |
+  WebsocketMessageEvent<WebsocketEvents.TOUCHPAD_BOX_CLOSE, {}>
