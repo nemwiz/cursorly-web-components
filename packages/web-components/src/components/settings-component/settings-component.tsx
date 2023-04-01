@@ -31,6 +31,7 @@ function startCamera() {
   };
 
   navigator.mediaDevices.getUserMedia(userMediaOptions).then((stream) => {
+    this.isStreaming = true;
     this.webcam.srcObject = stream;
     this.webcam.addEventListener('loadeddata', detectGesture.bind(this));
 
@@ -43,6 +44,11 @@ function startCamera() {
 }
 
 async function detectGesture() {
+
+  if (!this.isStreaming) {
+    return;
+  }
+
   const bitmap = await createImageBitmap(this.webcam);
   const results = await detect(bitmap);
 
@@ -82,7 +88,7 @@ async function detectGesture() {
   this.canvasContext.restore();
 
   // Call this function again to keep predicting when the browser is ready.
-  window.requestAnimationFrame(detectGesture.bind(this));
+  this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
 }
 
 @Component({
@@ -93,11 +99,13 @@ export class SettingsComponent {
 
   selectedCamera: MediaDeviceInfo;
   selectedScreen: Screen;
+  isStreaming: boolean = false;
   socket: WebSocket;
   isSocketOpen: boolean = false;
   webcam!: HTMLVideoElement;
   canvas!: HTMLCanvasElement;
   canvasContext: CanvasRenderingContext2D;
+  animationFrameId: number;
   currentVideoStream: MediaStream;
   isTouchpadBoxOpen: boolean = false;
   touchpadBox: TouchpadBox = {
@@ -186,7 +194,9 @@ export class SettingsComponent {
   }
 
   disconnectedCallback() {
+    this.isStreaming = false;
     this.currentVideoStream.getTracks().forEach(track => track.stop());
+    window.cancelAnimationFrame(this.animationFrameId);
   }
 
   render() {
@@ -194,7 +204,7 @@ export class SettingsComponent {
       <div>
         <div style={{position: 'relative'}}>
           <video id='webcam' autoPlay playsInline></video>
-          <canvas class='output_canvas' id='output_canvas' width='1280' height='720'
+          <canvas id='output_canvas' width='1280' height='720'
                   style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
         </div>
         <camera-selection onCameraSelected={(event) => {
