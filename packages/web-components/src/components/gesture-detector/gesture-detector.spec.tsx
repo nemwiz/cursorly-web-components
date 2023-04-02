@@ -1,15 +1,6 @@
 describe('gesture-detector', () => {
   it('renders', async () => {
-    // const page = await newSpecPage({
-    //   components: [GestureDetector],
-    //   html: `<gesture-detector></gesture-detector>`,
-    // });
-    // expect(page.root).toEqualHtml(`
-    //   <gesture-detector>
-    //     <mock:shadow-root>
-    //       <slot></slot>
-    //     </mock:shadow-root>
-    //   </gesture-detector>
-    // `);
+    // TODO - fix tests, it seems that Jest doesn't handle wasm files properly which
+    //  will change in Jest v29 but Stencil only supports v27 at the moment
   });
 });

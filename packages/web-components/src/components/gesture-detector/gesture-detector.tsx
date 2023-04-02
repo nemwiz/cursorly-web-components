@@ -1,7 +1,6 @@
 import {Component, h, Prop} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
-import {stopCameraStream} from '../../utils/camera';
 import {drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils';
 import {HAND_CONNECTIONS} from '@mediapipe/hands';
 import {post} from '../../service/http.service';
@@ -32,11 +31,6 @@ function startCamera() {
     this.isStreaming = true;
     this.webcam.srcObject = stream;
     this.webcam.addEventListener('loadeddata', detectGesture.bind(this));
-
-    if (typeof this.currentVideoStream !== 'undefined') {
-      stopCameraStream(this.currentVideoStream);
-    }
-
     this.currentVideoStream = stream;
   });
 }

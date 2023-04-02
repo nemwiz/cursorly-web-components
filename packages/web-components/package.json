@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@stencil/core": "^3.0.0",
-    "@mediapipe/tasks-vision": "0.1.0-alpha-5",
+    "@mediapipe/tasks-vision": "0.1.0-alpha-7",
     "@mediapipe/drawing_utils": "^0.3.1675466124",
     "@mediapipe/hands": "^0.4.1675469240"
   },
