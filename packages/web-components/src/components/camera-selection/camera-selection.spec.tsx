@@ -29,12 +29,12 @@ describe('camera-selection', () => {
       dummyCameras
     )
 
-    const page = await newSpecPage({
+    const {root} = await newSpecPage({
       components: [CameraSelection],
       html: `<camera-selection></camera-selection>`,
     });
 
-    expect(page.root.innerHTML).toContain(dummyCameras[0].label);
-    expect(page.root.innerHTML).toContain(dummyCameras[1].label);
+    expect(root.innerHTML).toContain(dummyCameras[0].label);
+    expect(root.innerHTML).toContain(dummyCameras[1].label);
   });
 });

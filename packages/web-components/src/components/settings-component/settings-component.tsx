@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {ScreenSettings} from '../../model/screen';
@@ -22,6 +22,12 @@ export class SettingsComponent {
    */
   @Event({eventName: 'cameraChanged'})
   cameraChanged: EventEmitter<string>;
+
+   /**
+   * JSON.stringify() array of screens
+   */
+  @Prop()
+  screens: string;
 
   selectedCamera: MediaDeviceInfo | undefined;
   selectedScreen: ScreenSettings | undefined;
@@ -57,16 +63,19 @@ export class SettingsComponent {
         }
         }></camera-selection>
 
-        <screen-selection class="mt-2" onScreenSelected={async (event) => {
-          this.selectedScreen = event.detail;
-          await this.setSettings();
-        }
-        }></screen-selection>
+        <screen-selection class="mt-2"
+                          screens={this.screens}
+                          onScreenSelected={async (event) => {
+                            this.selectedScreen = event.detail;
+                            await this.setSettings();
+                          }}></screen-selection>
 
         <div class="form-ext-control no-padding-form-control mt-2">
           <label class="form-ext-toggle__label"><span>Notifications</span>
             <div class="form-ext-toggle form-ext-toggle--dark">
-              <input type="checkbox" class="form-ext-input" checked={this.notifications}
+              <input type="checkbox"
+                     class="form-ext-input"
+                     checked={this.notifications}
                      onChange={async () => {
                        this.notifications = !this.notifications;
                        await this.setSettings();

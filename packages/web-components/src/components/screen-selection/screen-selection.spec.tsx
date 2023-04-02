@@ -1,18 +1,20 @@
-import { newSpecPage } from '@stencil/core/testing';
-import { ScreenSelection } from './screen-selection';
+import {newSpecPage} from '@stencil/core/testing';
+import {ScreenSelection} from './screen-selection';
 
 describe('screen-selection', () => {
-  it('renders', async () => {
-    const page = await newSpecPage({
+  it('shows the list of screens', async () => {
+
+    const dummyScreens = [
+      {name: 'TestScreen1', screenId: 123},
+      {name: 'TestScreen2', screenId: 456}
+    ]
+
+    const {root} = await newSpecPage({
       components: [ScreenSelection],
-      html: `<screen-selection></screen-selection>`,
+      html: `<screen-selection screens='${JSON.stringify(dummyScreens)}'></screen-selection>`,
     });
-    expect(page.root).toEqualHtml(`
-      <screen-selection>
-        <mock:shadow-root>
-          <slot></slot>
-        </mock:shadow-root>
-      </screen-selection>
-    `);
+
+    expect(root.innerHTML).toContain(dummyScreens[0].name);
+    expect(root.innerHTML).toContain(dummyScreens[1].name);
   });
 });

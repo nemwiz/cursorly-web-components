@@ -19,8 +19,16 @@ export namespace Components {
         "cameraId": string;
     }
     interface ScreenSelection {
+        /**
+          * JSON.stringify() array of screens
+         */
+        "screens": string;
     }
     interface SettingsComponent {
+        /**
+          * JSON.stringify() array of screens
+         */
+        "screens": string;
     }
 }
 export interface CameraSelectionCustomEvent<T> extends CustomEvent<T> {
@@ -85,6 +93,10 @@ declare namespace LocalJSX {
           * When a screen gets selected from the dropdown, this event emits selected screen information
          */
         "onScreenSelected"?: (event: ScreenSelectionCustomEvent<ScreenSettings>) => void;
+        /**
+          * JSON.stringify() array of screens
+         */
+        "screens"?: string;
     }
     interface SettingsComponent {
         /**
@@ -95,6 +107,10 @@ declare namespace LocalJSX {
           * Triggers every time when a user updates any of the settings
          */
         "onSettingsChanged"?: (event: SettingsComponentCustomEvent<Settings>) => void;
+        /**
+          * JSON.stringify() array of screens
+         */
+        "screens"?: string;
     }
     interface IntrinsicElements {
         "camera-selection": CameraSelection;

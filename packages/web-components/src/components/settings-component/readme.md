@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property  | Attribute | Description                       | Type     | Default     |
+| --------- | --------- | --------------------------------- | -------- | ----------- |
+| `screens` | `screens` | JSON.stringify() array of screens | `string` | `undefined` |
+
+
 ## Events
 
 | Event             | Description                                                              | Type                    |

@@ -1,6 +1,5 @@
-import {Component, Event, EventEmitter, h, Host, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Host, Prop, State} from '@stencil/core';
 import {Screen, ScreenSettings} from '../../model/screen';
-import {get} from '../../service/http.service';
 
 @Component({
   tag: 'screen-selection',
@@ -14,16 +13,23 @@ export class ScreenSelection {
   @Event({eventName: 'screenSelected'})
   screenSelected: EventEmitter<ScreenSettings>;
 
-  @State()
-  screens: Screen[] = [];
+  /**
+   * JSON.stringify() array of screens
+   */
+  @Prop()
+  screens: string = '';
+
+  screensInfo: Screen[] = [];
 
   @State()
   isSingleScreen: boolean = false;
 
+  componentWillRender() {
+    this.screensInfo = JSON.parse(this.screens);
+  }
+
   async componentDidLoad() {
-    // TODO - parametrize url, refactor this to prop and move it to the parent component
-    this.screens = await get<Screen[]>('http://localhost:39459/settings/screens');
-    this.screenSelected.emit({isSingleScreen: this.isSingleScreen, screen: this.screens[0]});
+    this.screenSelected.emit({isSingleScreen: this.isSingleScreen, screen: this.screensInfo[0]});
   }
 
   render() {
@@ -50,10 +56,10 @@ export class ScreenSelection {
         <div class="input-control mt-2">
           <label>Display name</label>
           <select class="select" disabled={this.isSingleScreen} onChange={(event: Event) => {
-            const selectedScreen = this.screens.find(s => s.screenId === parseInt((event.target as HTMLSelectElement).value));
+            const selectedScreen = this.screensInfo.find(s => s.screenId === parseInt((event.target as HTMLSelectElement).value));
             this.screenSelected.emit({isSingleScreen: this.isSingleScreen, screen: selectedScreen});
           }}>
-            {this.screens.map(screen =>
+            {this.screensInfo.map(screen =>
               <option value={screen.screenId}>
                 {screen.name}
               </option>
