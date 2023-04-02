@@ -11,10 +11,11 @@
     "packages/*"
   ],
   "scripts": {
+    "build-storybook": "storybook build",
+    "generate": "lerna run generate --scope @cursorly/web-components",
     "start": "lerna run start",
     "storybook": "storybook dev -p 6006 --no-open",
-    "generate": "lerna run generate --scope @cursorly/web-components",
-    "build-storybook": "storybook build"
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^7.0.0",

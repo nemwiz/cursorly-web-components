@@ -18,7 +18,7 @@ export class CameraSelection {
 
   async componentDidLoad() {
     try {
-      this.cameras = getDevices(await navigator.mediaDevices.enumerateDevices());
+      this.cameras = await getDevices();
       this.cameraSelected.emit(this.cameras[0]);
     } catch (e) {
       // TODO - think about error handling here, maybe we don't need it if permissions api works
