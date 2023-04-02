@@ -5,6 +5,14 @@
 <!-- Auto Generated Below -->
 
 
+## Events
+
+| Event             | Description                                                              | Type                    |
+| ----------------- | ------------------------------------------------------------------------ | ----------------------- |
+| `cameraChanged`   | Re-emits the camera id. This one is only used locally within the browser | `CustomEvent<string>`   |
+| `settingsChanged` | Triggers every time when a user updates any of the settings              | `CustomEvent<Settings>` |
+
+
 ## Dependencies
 
 ### Depends on

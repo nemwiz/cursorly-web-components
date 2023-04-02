@@ -1,95 +1,9 @@
-import {Component, h} from '@stencil/core';
+import {Component, Event, EventEmitter, h, State} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
-import {stopCameraStream} from '../../utils/camera';
-import {drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils';
-import {HAND_CONNECTIONS} from '@mediapipe/hands';
-import {Screen} from '../../model/screen';
+import {ScreenSettings} from '../../model/screen';
 import {post} from '../../service/http.service';
-import {CreateSettingsRequest} from '../../model/settings';
-import {createGestureRecognizer, detect} from './detection.worker';
-import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
-import {TouchpadBox} from '../../model/touchpad-box';
-
-const VIDEO_HEIGHT = '360px';
-const VIDEO_WIDTH = '480px';
-
-declare global {
-  interface Window {
-    drawConnectors: typeof drawConnectors,
-    drawLandmarks: typeof drawLandmarks,
-    HAND_CONNECTIONS: typeof HAND_CONNECTIONS
-  }
-}
-
-function startCamera() {
-
-  const userMediaOptions = {
-    video: {
-      deviceId: this.selectedCamera.deviceId
-    },
-  };
-
-  navigator.mediaDevices.getUserMedia(userMediaOptions).then((stream) => {
-    this.isStreaming = true;
-    this.webcam.srcObject = stream;
-    this.webcam.addEventListener('loadeddata', detectGesture.bind(this));
-
-    if (typeof this.currentVideoStream !== 'undefined') {
-      stopCameraStream(this.currentVideoStream);
-    }
-
-    this.currentVideoStream = stream;
-  });
-}
-
-async function detectGesture() {
-
-  if (!this.isStreaming) {
-    return;
-  }
-
-  const bitmap = await createImageBitmap(this.webcam);
-  const results = await detect(bitmap);
-
-  this.canvasContext.save();
-  this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-  this.canvas.style.height = VIDEO_HEIGHT;
-  this.webcam.style.height = VIDEO_HEIGHT;
-  this.canvas.style.width = VIDEO_WIDTH;
-  this.webcam.style.width = VIDEO_WIDTH;
-
-  this.drawTouchpadBox();
-
-  if (results.landmarks && results.landmarks.length !== 0) {
-    for (const landmarks of results.landmarks) {
-      window.drawConnectors(this.canvasContext, landmarks, window.HAND_CONNECTIONS, {
-        color: '#00FF00',
-        lineWidth: 5
-      });
-      window.drawLandmarks(this.canvasContext, landmarks, {color: '#FF0000', lineWidth: 2});
-    }
-
-    if (this.isSocketOpen) {
-      this.socket.send(JSON.stringify({
-        landmarks: results.landmarks,
-        gestures: results.gestures,
-        handedness: results.handednesses,
-        frame: {
-          width: this.canvas.width,
-          height: this.canvas.height
-        }
-      }));
-    }
-
-  }
-
-  this.canvasContext.restore();
-
-  // Call this function again to keep predicting when the browser is ready.
-  this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
-}
+import {Settings} from '../../model/settings';
 
 @Component({
   tag: 'settings-component',
@@ -97,132 +11,70 @@ async function detectGesture() {
 })
 export class SettingsComponent {
 
-  selectedCamera: MediaDeviceInfo;
-  selectedScreen: Screen;
-  isStreaming: boolean = false;
-  socket: WebSocket;
-  isSocketOpen: boolean = false;
-  webcam!: HTMLVideoElement;
-  canvas!: HTMLCanvasElement;
-  canvasContext: CanvasRenderingContext2D;
-  animationFrameId: number;
-  currentVideoStream: MediaStream;
-  isTouchpadBoxOpen: boolean = false;
-  touchpadBox: TouchpadBox = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-  }
+  /**
+   * Triggers every time when a user updates any of the settings
+   */
+  @Event({eventName: 'settingsChanged'})
+  settingsChanged: EventEmitter<Settings>;
 
-  drawTouchpadBox() {
-    if (this.isTouchpadBoxOpen) {
-      this.canvasContext.strokeStyle = '#ff9800';
-      this.canvasContext.lineWidth = 12;
-      this.canvasContext.strokeRect(this.touchpadBox.x, this.touchpadBox.y, this.touchpadBox.width, this.touchpadBox.height);
-    }
-  }
+  /**
+   * Re-emits the camera id. This one is only used locally within the browser
+   */
+  @Event({eventName: 'cameraChanged'})
+  cameraChanged: EventEmitter<string>;
 
-  async componentDidLoad() {
-    await createGestureRecognizer();
-    this.webcam = document.getElementById('webcam') as HTMLVideoElement;
-    this.canvas = document.getElementById('output_canvas') as HTMLCanvasElement;
-    this.canvasContext = this.canvas.getContext('2d');
-    startCamera.apply(this);
+  selectedCamera: MediaDeviceInfo | undefined;
+  selectedScreen: ScreenSettings | undefined;
 
-
-    this.socket = new WebSocket('ws://localhost:8765');
-
-    this.socket.addEventListener('open', () => {
-
-      console.log('Socket connection is open');
-      this.isSocketOpen = true;
-
-    });
-
-    this.socket.addEventListener('close', () => {
-
-      console.log('Socket connection has closed')
-
-      this.isSocketOpen = false;
-    });
-
-    this.socket.addEventListener('error', () => {
-
-      console.log('Socket connection has an error')
-      this.isSocketOpen = false;
-
-    });
-
-    this.socket.addEventListener('message', (event: MessageEvent) => {
-
-      const websocketEvent = JSON.parse(event.data) as WebsocketEvent;
-
-      switch (websocketEvent.name) {
-        case WebsocketEvents.TOUCHPAD_BOX_OPEN:
-          const {xMin, yMin, width, height} = websocketEvent.data;
-          this.touchpadBox = {
-            x: xMin,
-            y: yMin,
-            width,
-            height
-          }
-          this.isTouchpadBoxOpen = true
-          break;
-        case WebsocketEvents.TOUCHPAD_BOX_CLOSE:
-          this.isTouchpadBoxOpen = false;
-          break;
-      }
-
-    });
-  }
+  @State()
+  notifications: boolean = true;
 
   async setSettings() {
     const settings = {
       airTouchpad: {
-        screenId: this.selectedScreen.screenId,
-        isSingleScreen: true
+        screenId: this.selectedScreen?.screen.screenId,
+        isSingleScreen: this.selectedScreen?.isSingleScreen
       },
       noseTouchpad: {
-        screenId: this.selectedScreen.screenId,
-        isSingleScreen: true
+        screenId: this.selectedScreen?.screen.screenId,
+        isSingleScreen: this.selectedScreen?.isSingleScreen
       },
-      notifications: true
+      notifications: this.notifications
     }
 
-    await post<void, CreateSettingsRequest>('http://localhost:39459/settings', settings);
-  }
-
-  disconnectedCallback() {
-    this.isStreaming = false;
-    this.currentVideoStream.getTracks().forEach(track => track.stop());
-    window.cancelAnimationFrame(this.animationFrameId);
+    this.settingsChanged.emit(settings);
+    // TODO - move this in the parent component
+    await post<void, Settings>('http://localhost:39459/settings', settings);
   }
 
   render() {
     return (
-      <div>
-        <div style={{position: 'relative'}}>
-          <video id='webcam' autoPlay playsInline></video>
-          <canvas id='output_canvas' width='1280' height='720'
-                  style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
-        </div>
-        <camera-selection onCameraSelected={(event) => {
+      <div class="u-flex u-flex-column w-40p">
+
+        <camera-selection onCameraSelected={async (event) => {
           this.selectedCamera = event.detail;
+          this.cameraChanged.emit(this.selectedCamera.deviceId);
         }
         }></camera-selection>
-        <screen-selection onScreenSelected={async (event) => {
+
+        <screen-selection class="mt-2" onScreenSelected={async (event) => {
           this.selectedScreen = event.detail;
           await this.setSettings();
         }
         }></screen-selection>
 
-
-        <button onClick={async () => {
-          await post<void, {}>('http://localhost:39459/modes/stop', {});
-          this.currentVideoStream.getTracks().forEach(s => s.stop());
-        }}>Stop
-        </button>
+        <div class="form-ext-control no-padding-form-control mt-2">
+          <label class="form-ext-toggle__label"><span>Notifications</span>
+            <div class="form-ext-toggle form-ext-toggle--dark">
+              <input type="checkbox" class="form-ext-input" checked={this.notifications}
+                     onChange={async () => {
+                       this.notifications = !this.notifications;
+                       await this.setSettings();
+                     }}/>
+              <div class="form-ext-toggle__toggler"><i></i></div>
+            </div>
+          </label>
+        </div>
 
       </div>
     );

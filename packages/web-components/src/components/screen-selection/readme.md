@@ -7,9 +7,9 @@
 
 ## Events
 
-| Event            | Description                                                                                 | Type                  |
-| ---------------- | ------------------------------------------------------------------------------------------- | --------------------- |
-| `screenSelected` | When a screen gets selected from the dropdown, this event emits selected screen information | `CustomEvent<Screen>` |
+| Event            | Description                                                                                 | Type                          |
+| ---------------- | ------------------------------------------------------------------------------------------- | ----------------------------- |
+| `screenSelected` | When a screen gets selected from the dropdown, this event emits selected screen information | `CustomEvent<ScreenSettings>` |
 
 
 ## Dependencies

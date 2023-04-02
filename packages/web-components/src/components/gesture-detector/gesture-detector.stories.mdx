@@ -1,0 +1,14 @@
+import {Markdown, Meta, Story} from '@storybook/blocks';
+import Props from './readme.md?raw'
+
+<Meta title="Components/GestureDetector"/>
+
+<Markdown>{Props}</Markdown>
+
+export const GestureDetectorComponent = (args) => `<gesture-detector></gesture-detector>`;
+
+## GestureDetector
+
+<Story name="GestureDetector">
+  {GestureDetectorComponent.bind({})}
+</Story>

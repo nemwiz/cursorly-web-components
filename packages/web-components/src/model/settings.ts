@@ -1,4 +1,4 @@
-export interface CreateSettingsRequest {
+export interface Settings {
   airTouchpad: {
     screenId: number;
     isSingleScreen: boolean;
