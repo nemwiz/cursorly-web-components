@@ -2,5 +2,18 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
   "npmClient": "yarn",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "command": {
+    "version": {
+      "noChangelog": true,
+      "noCommitHooks": true,
+      "noGitTagVersion": true,
+      "noPush": true
+    },
+    "publish": {
+      "noGitReset": true,
+      "verifyAccess": false,
+      "registry": "http://localhost:4873"
+    }
+  }
 }

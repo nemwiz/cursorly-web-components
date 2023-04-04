@@ -1,0 +1,19 @@
+{
+  "name": "@cursorly/web-components-angular",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^15.2.0",
+    "@angular/core": "^15.2.0",
+    "@cursorly/web-components": "*"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false
+}

@@ -11,8 +11,10 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "lerna run build",
     "build-storybook": "storybook build",
     "generate": "lerna run generate --scope @cursorly/web-components",
+    "publish:packages": "lerna publish",
     "start": "lerna run start",
     "storybook": "storybook dev -p 6006 --no-open",
     "test": "lerna run test"
