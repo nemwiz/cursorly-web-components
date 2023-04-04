@@ -1,6 +1,6 @@
 {
-  "name": "angular-workspace",
-  "version": "0.0.2",
+  "name": "@cursorly/web-components-angular",
+  "version": "0.0.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,6 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
+  "main": "dist/esm2020/public-api.mjs",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@angular/animations": "^15.2.0",
     "@angular/common": "^15.2.0",

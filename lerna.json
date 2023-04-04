@@ -2,7 +2,11 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
   "npmClient": "yarn",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "packages": [
+    "packages/angular-workspace/projects/web-components-angular",
+    "packages/*"
+  ],
   "command": {
     "version": {
       "noChangelog": true,
