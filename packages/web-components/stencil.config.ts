@@ -22,6 +22,7 @@ export const config: Config = {
       componentCorePackage: '@cursorly/web-components',
       directivesProxyFile: '../angular-workspace/projects/web-components-angular/src/lib/stencil-generated/components.ts',
       directivesArrayFile: '../angular-workspace/projects/web-components-angular/src/lib/stencil-generated/index.ts',
+      includeImportCustomElements: true
     })
   ],
 };

@@ -5,14 +5,14 @@ import {defineCustomElements} from '@cursorly/web-components/loader';
 @NgModule({
   declarations: [...DIRECTIVES],
   exports: [...DIRECTIVES],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: () => {
-        return defineCustomElements();
-      }
-    }
-  ]
+  // providers: [
+  //   {
+  //     provide: APP_INITIALIZER,
+  //     useFactory: () => {
+  //       return defineCustomElements();
+  //     }
+  //   }
+  // ]
 })
 export class CursorlyWebComponentsAngularModule {
 }

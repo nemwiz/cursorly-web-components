@@ -4,10 +4,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 
 import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
 
-import { Components } from '@cursorly/web-components';
+import type { Components } from '@cursorly/web-components/components';
 
-
+import { defineCustomElement as defineCameraSelection } from '@cursorly/web-components/components/camera-selection.js';
+import { defineCustomElement as defineGestureDetector } from '@cursorly/web-components/components/gesture-detector.js';
+import { defineCustomElement as defineScreenSelection } from '@cursorly/web-components/components/screen-selection.js';
+import { defineCustomElement as defineSettingsComponent } from '@cursorly/web-components/components/settings-component.js';
 @ProxyCmp({
+  defineCustomElementFn: defineCameraSelection
 })
 @Component({
   selector: 'camera-selection',
@@ -35,6 +39,7 @@ export declare interface CameraSelection extends Components.CameraSelection {
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineGestureDetector,
   inputs: ['cameraId']
 })
 @Component({
@@ -57,6 +62,7 @@ export declare interface GestureDetector extends Components.GestureDetector {}
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineScreenSelection,
   inputs: ['screens']
 })
 @Component({
@@ -76,7 +82,7 @@ export class ScreenSelection {
 }
 
 
-import type { ScreenSettings as IScreenSelectionScreenSettings } from '@cursorly/web-components';
+import type { ScreenSettings as IScreenSelectionScreenSettings } from '@cursorly/web-components/components';
 
 export declare interface ScreenSelection extends Components.ScreenSelection {
   /**
@@ -87,6 +93,7 @@ export declare interface ScreenSelection extends Components.ScreenSelection {
 
 
 @ProxyCmp({
+  defineCustomElementFn: defineSettingsComponent,
   inputs: ['screens']
 })
 @Component({
@@ -106,7 +113,7 @@ export class SettingsComponent {
 }
 
 
-import type { Settings as ISettingsComponentSettings } from '@cursorly/web-components';
+import type { Settings as ISettingsComponentSettings } from '@cursorly/web-components/components';
 
 export declare interface SettingsComponent extends Components.SettingsComponent {
   /**
