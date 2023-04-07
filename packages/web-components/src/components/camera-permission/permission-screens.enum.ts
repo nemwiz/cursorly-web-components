@@ -1,0 +1,6 @@
+export enum PermissionScreens {
+  SPINNER,
+  PERMISSION_INFO,
+  PERMISSION_PROMPT,
+  PERMISSION_DENIED
+}

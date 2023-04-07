@@ -10,6 +10,18 @@ import { Settings } from "./model/settings";
 export { ScreenSettings } from "./model/screen";
 export { Settings } from "./model/settings";
 export namespace Components {
+    interface CameraPermission {
+    }
+    interface CameraPermissionDenied {
+    }
+    interface CameraPermissionInfo {
+        /**
+          * Hides the continue button on Firefox because Permission API for camera is not supported
+         */
+        "isFirefox": boolean;
+    }
+    interface CameraPermissionPrompt {
+    }
     interface CameraSelection {
     }
     interface GestureDetector {
@@ -31,6 +43,18 @@ export namespace Components {
         "screens": string;
     }
 }
+export interface CameraPermissionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCameraPermissionElement;
+}
+export interface CameraPermissionInfoCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCameraPermissionInfoElement;
+}
+export interface CameraPermissionPromptCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCameraPermissionPromptElement;
+}
 export interface CameraSelectionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLCameraSelectionElement;
@@ -44,6 +68,30 @@ export interface SettingsComponentCustomEvent<T> extends CustomEvent<T> {
     target: HTMLSettingsComponentElement;
 }
 declare global {
+    interface HTMLCameraPermissionElement extends Components.CameraPermission, HTMLStencilElement {
+    }
+    var HTMLCameraPermissionElement: {
+        prototype: HTMLCameraPermissionElement;
+        new (): HTMLCameraPermissionElement;
+    };
+    interface HTMLCameraPermissionDeniedElement extends Components.CameraPermissionDenied, HTMLStencilElement {
+    }
+    var HTMLCameraPermissionDeniedElement: {
+        prototype: HTMLCameraPermissionDeniedElement;
+        new (): HTMLCameraPermissionDeniedElement;
+    };
+    interface HTMLCameraPermissionInfoElement extends Components.CameraPermissionInfo, HTMLStencilElement {
+    }
+    var HTMLCameraPermissionInfoElement: {
+        prototype: HTMLCameraPermissionInfoElement;
+        new (): HTMLCameraPermissionInfoElement;
+    };
+    interface HTMLCameraPermissionPromptElement extends Components.CameraPermissionPrompt, HTMLStencilElement {
+    }
+    var HTMLCameraPermissionPromptElement: {
+        prototype: HTMLCameraPermissionPromptElement;
+        new (): HTMLCameraPermissionPromptElement;
+    };
     interface HTMLCameraSelectionElement extends Components.CameraSelection, HTMLStencilElement {
     }
     var HTMLCameraSelectionElement: {
@@ -69,6 +117,10 @@ declare global {
         new (): HTMLSettingsComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "camera-permission": HTMLCameraPermissionElement;
+        "camera-permission-denied": HTMLCameraPermissionDeniedElement;
+        "camera-permission-info": HTMLCameraPermissionInfoElement;
+        "camera-permission-prompt": HTMLCameraPermissionPromptElement;
         "camera-selection": HTMLCameraSelectionElement;
         "gesture-detector": HTMLGestureDetectorElement;
         "screen-selection": HTMLScreenSelectionElement;
@@ -76,6 +128,30 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface CameraPermission {
+        /**
+          * This event notifies parents components that the user granted permission to use the camera
+         */
+        "onPermissionGranted"?: (event: CameraPermissionCustomEvent<void>) => void;
+    }
+    interface CameraPermissionDenied {
+    }
+    interface CameraPermissionInfo {
+        /**
+          * Hides the continue button on Firefox because Permission API for camera is not supported
+         */
+        "isFirefox"?: boolean;
+        /**
+          * Emits the event so that the next screen could be shown
+         */
+        "onPermissionInfoContinued"?: (event: CameraPermissionInfoCustomEvent<void>) => void;
+    }
+    interface CameraPermissionPrompt {
+        /**
+          * This event notifies parents components that the user granted permission to use the camera
+         */
+        "onCameraPermissionGranted"?: (event: CameraPermissionPromptCustomEvent<boolean>) => void;
+    }
     interface CameraSelection {
         /**
           * When a camera gets selected from the dropdown, this event emits [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)
@@ -113,6 +189,10 @@ declare namespace LocalJSX {
         "screens"?: string;
     }
     interface IntrinsicElements {
+        "camera-permission": CameraPermission;
+        "camera-permission-denied": CameraPermissionDenied;
+        "camera-permission-info": CameraPermissionInfo;
+        "camera-permission-prompt": CameraPermissionPrompt;
         "camera-selection": CameraSelection;
         "gesture-detector": GestureDetector;
         "screen-selection": ScreenSelection;
@@ -123,6 +203,10 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "camera-permission": LocalJSX.CameraPermission & JSXBase.HTMLAttributes<HTMLCameraPermissionElement>;
+            "camera-permission-denied": LocalJSX.CameraPermissionDenied & JSXBase.HTMLAttributes<HTMLCameraPermissionDeniedElement>;
+            "camera-permission-info": LocalJSX.CameraPermissionInfo & JSXBase.HTMLAttributes<HTMLCameraPermissionInfoElement>;
+            "camera-permission-prompt": LocalJSX.CameraPermissionPrompt & JSXBase.HTMLAttributes<HTMLCameraPermissionPromptElement>;
             "camera-selection": LocalJSX.CameraSelection & JSXBase.HTMLAttributes<HTMLCameraSelectionElement>;
             "gesture-detector": LocalJSX.GestureDetector & JSXBase.HTMLAttributes<HTMLGestureDetectorElement>;
             "screen-selection": LocalJSX.ScreenSelection & JSXBase.HTMLAttributes<HTMLScreenSelectionElement>;
