@@ -181,6 +181,7 @@ export class GestureDetector {
         </div>
 
         <button onClick={async () => {
+          // TODO - remove this button and put it in the parent app
           await post<void, {}>('http://localhost:39459/modes/stop', {});
           this.currentVideoStream.getTracks().forEach(s => s.stop());
         }}>Stop
