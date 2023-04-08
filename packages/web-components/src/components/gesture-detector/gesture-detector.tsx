@@ -3,7 +3,6 @@ import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils';
 import {HAND_CONNECTIONS} from '@mediapipe/hands';
-import {post} from '../../service/http.service';
 import {createGestureRecognizer, detect} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
@@ -95,6 +94,12 @@ export class GestureDetector {
   @Prop()
   cameraId: string;
 
+  /**
+   * The url where websocket server is running. It should be in format host:port e.g. localhost:1234
+   */
+  @Prop()
+  websocketUrl: string;
+
   isStreaming: boolean = false;
   webcam!: HTMLVideoElement;
   canvas!: HTMLCanvasElement;
@@ -128,7 +133,7 @@ export class GestureDetector {
     this.canvasContext = this.canvas.getContext('2d');
     startCamera.apply(this);
 
-    this.socket = new WebSocket('ws://localhost:8765');
+    this.socket = new WebSocket(`ws://${this.websocketUrl}`);
 
     this.socket.addEventListener('open', () => {
       this.isSocketOpen = true;
@@ -173,20 +178,10 @@ export class GestureDetector {
 
   render() {
     return (
-      <div>
-        <div style={{position: 'relative'}}>
-          <video id='webcam' autoPlay playsInline></video>
-          <canvas id='output_canvas' width='1280' height='720'
-                  style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
-        </div>
-
-        <button onClick={async () => {
-          // TODO - remove this button and put it in the parent app
-          await post<void, {}>('http://localhost:39459/modes/stop', {});
-          this.currentVideoStream.getTracks().forEach(s => s.stop());
-        }}>Stop
-        </button>
-
+      <div style={{position: 'relative'}}>
+        <video id='webcam' autoPlay playsInline></video>
+        <canvas id='output_canvas' width='1280' height='720'
+                style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
       </div>
     );
   }

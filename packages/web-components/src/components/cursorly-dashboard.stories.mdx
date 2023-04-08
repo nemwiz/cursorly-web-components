@@ -3,7 +3,7 @@ import '../../dist/web-components/web-components.esm';
 
 <Meta title="Dashboard"/>
 
-export const CursorlyDashboard = (args) => `<div><script>window.addEventListener('cameraChanged', (event) => {window.cameraId = event.detail})</script><settings-component screens='${JSON.stringify([{name: 'Display 1', screenId: 6786}, {name: 'Display 2', screenId: 4621}])}'></settings-component><gesture-detector camera-id="${window.cameraId}"></gesture-detector></div>`;
+export const CursorlyDashboard = (args) => `<div><script>window.addEventListener('cameraChanged', (event) => {window.cameraId = event.detail})</script><settings-component screens='${JSON.stringify([{name: 'Display 1', screenId: 6786}, {name: 'Display 2', screenId: 4621}])}'></settings-component><gesture-detector camera-id="${window.cameraId}" websocket-url="localhost:39460"></gesture-detector></div>`;
 
 <Story name="Cursorly dashboard">
   {CursorlyDashboard.bind({})}
