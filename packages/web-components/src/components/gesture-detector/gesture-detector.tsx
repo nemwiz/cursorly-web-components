@@ -1,18 +1,17 @@
 import {Component, h, Prop} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
-import {drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils';
+import {drawLandmarks} from '@mediapipe/drawing_utils';
 import {HAND_CONNECTIONS} from '@mediapipe/hands';
 import {createGestureRecognizer, detect} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
 
-const VIDEO_HEIGHT = '360px';
-const VIDEO_WIDTH = '480px';
+const VIDEO_HEIGHT = '400px';
+const VIDEO_WIDTH = '520px';
 
 declare global {
   interface Window {
-    drawConnectors: typeof drawConnectors,
     drawLandmarks: typeof drawLandmarks,
     HAND_CONNECTIONS: typeof HAND_CONNECTIONS
   }
@@ -54,13 +53,8 @@ async function detectGesture() {
   this.drawTouchpadBox();
 
   if (gesture.landmarks && gesture.landmarks.length !== 0) {
-    for (const landmarks of gesture.landmarks) {
-      window.drawConnectors(this.canvasContext, landmarks, window.HAND_CONNECTIONS, {
-        color: '#00FF00',
-        lineWidth: 5
-      });
-      window.drawLandmarks(this.canvasContext, landmarks, {color: '#FF0000', lineWidth: 2});
-    }
+
+    window.drawLandmarks(this.canvasContext, [gesture.landmarks[0][5]], {color: '#FF0000', lineWidth: 2});
 
     if (this.isSocketOpen) {
       this.socket.send(JSON.stringify({
@@ -179,9 +173,14 @@ export class GestureDetector {
   render() {
     return (
       <div style={{position: 'relative'}}>
-        <video id='webcam' autoPlay playsInline></video>
+        <video id='webcam' autoPlay playsInline style={{transform: 'scale(-1, 1)'}}></video>
         <canvas id='output_canvas' width='1280' height='720'
-                style={{position: 'absolute', left: '0px', top: '0px'}}></canvas>
+                style={{
+                  position: 'absolute',
+                  left: '0px',
+                  top: '0px',
+                  transform: 'scale(-1, 1)',
+                }}></canvas>
       </div>
     );
   }

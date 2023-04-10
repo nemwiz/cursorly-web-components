@@ -2,7 +2,6 @@ import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {ScreenSettings} from '../../model/screen';
-import {post} from '../../service/http.service';
 import {Settings} from '../../model/settings';
 
 @Component({
@@ -49,13 +48,11 @@ export class SettingsComponent {
     }
 
     this.settingsChanged.emit(settings);
-    // TODO - move this in the parent component
-    await post<void, Settings>('http://localhost:39459/settings', settings);
   }
 
   render() {
     return (
-      <div class="u-flex u-flex-column w-40p">
+      <div class="u-flex u-flex-column">
 
         <camera-selection onCameraSelected={async (event) => {
           this.selectedCamera = event.detail;

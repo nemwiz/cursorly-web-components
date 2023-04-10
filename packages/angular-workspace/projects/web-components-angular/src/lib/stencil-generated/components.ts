@@ -151,14 +151,14 @@ export declare interface CameraSelection extends Components.CameraSelection {
 
 @ProxyCmp({
   defineCustomElementFn: defineGestureDetector,
-  inputs: ['cameraId']
+  inputs: ['cameraId', 'websocketUrl']
 })
 @Component({
   selector: 'gesture-detector',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['cameraId'],
+  inputs: ['cameraId', 'websocketUrl'],
 })
 export class GestureDetector {
   protected el: HTMLElement;

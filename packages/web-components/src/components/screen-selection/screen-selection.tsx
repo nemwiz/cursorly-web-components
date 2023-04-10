@@ -36,14 +36,9 @@ export class ScreenSelection {
     return (
       <Host>
 
-        <div class="form-ext-control no-padding-form-control u-relative">
-        <span class="icon subtitle mb-0 tooltip u-absolute"
-              data-tooltip="When turned on, you have to move your hand more."
-              style={{top: '0'}}>
-              <i class="fas fa-wrapper fa-info-circle"></i>
-            </span>
+        <div class="form-ext-control no-padding-form-control">
           <label class="form-ext-toggle__label">
-            <span class="pl-3">Multi-display</span>
+            <span>Multi-display</span>
             <div class="form-ext-toggle form-ext-toggle--dark">
               <input type="checkbox" class="form-ext-input"
                      checked={this.isSingleScreen}

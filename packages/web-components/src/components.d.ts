@@ -29,6 +29,10 @@ export namespace Components {
           * The device id of selected camera
          */
         "cameraId": string;
+        /**
+          * The url where websocket server is running. It should be in format host:port e.g. localhost:1234
+         */
+        "websocketUrl": string;
     }
     interface ScreenSelection {
         /**
@@ -163,6 +167,10 @@ declare namespace LocalJSX {
           * The device id of selected camera
          */
         "cameraId"?: string;
+        /**
+          * The url where websocket server is running. It should be in format host:port e.g. localhost:1234
+         */
+        "websocketUrl"?: string;
     }
     interface ScreenSelection {
         /**
