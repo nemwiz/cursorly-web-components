@@ -91,7 +91,7 @@ export class CameraPermission {
           ? <camera-permission-denied></camera-permission-denied>
           : null}
         {this.currentScreen === PermissionScreens.SPINNER
-          ? <div class="animated loading hide-text"><p>Hidden</p></div>
+          ? <cursoly-spinner size={'large'}></cursoly-spinner>
           : null}
       </div>
     );

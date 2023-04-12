@@ -24,6 +24,12 @@ export namespace Components {
     }
     interface CameraSelection {
     }
+    interface CursorlySpinner {
+        /**
+          * Size of the spinner. Only values supported are 'regular' or 'large'
+         */
+        "size": string;
+    }
     interface GestureDetector {
         /**
           * The device id of selected camera
@@ -102,6 +108,12 @@ declare global {
         prototype: HTMLCameraSelectionElement;
         new (): HTMLCameraSelectionElement;
     };
+    interface HTMLCursorlySpinnerElement extends Components.CursorlySpinner, HTMLStencilElement {
+    }
+    var HTMLCursorlySpinnerElement: {
+        prototype: HTMLCursorlySpinnerElement;
+        new (): HTMLCursorlySpinnerElement;
+    };
     interface HTMLGestureDetectorElement extends Components.GestureDetector, HTMLStencilElement {
     }
     var HTMLGestureDetectorElement: {
@@ -126,6 +138,7 @@ declare global {
         "camera-permission-info": HTMLCameraPermissionInfoElement;
         "camera-permission-prompt": HTMLCameraPermissionPromptElement;
         "camera-selection": HTMLCameraSelectionElement;
+        "cursorly-spinner": HTMLCursorlySpinnerElement;
         "gesture-detector": HTMLGestureDetectorElement;
         "screen-selection": HTMLScreenSelectionElement;
         "settings-component": HTMLSettingsComponentElement;
@@ -161,6 +174,12 @@ declare namespace LocalJSX {
           * When a camera gets selected from the dropdown, this event emits [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)
          */
         "onCameraSelected"?: (event: CameraSelectionCustomEvent<MediaDeviceInfo>) => void;
+    }
+    interface CursorlySpinner {
+        /**
+          * Size of the spinner. Only values supported are 'regular' or 'large'
+         */
+        "size"?: string;
     }
     interface GestureDetector {
         /**
@@ -202,6 +221,7 @@ declare namespace LocalJSX {
         "camera-permission-info": CameraPermissionInfo;
         "camera-permission-prompt": CameraPermissionPrompt;
         "camera-selection": CameraSelection;
+        "cursorly-spinner": CursorlySpinner;
         "gesture-detector": GestureDetector;
         "screen-selection": ScreenSelection;
         "settings-component": SettingsComponent;
@@ -216,6 +236,7 @@ declare module "@stencil/core" {
             "camera-permission-info": LocalJSX.CameraPermissionInfo & JSXBase.HTMLAttributes<HTMLCameraPermissionInfoElement>;
             "camera-permission-prompt": LocalJSX.CameraPermissionPrompt & JSXBase.HTMLAttributes<HTMLCameraPermissionPromptElement>;
             "camera-selection": LocalJSX.CameraSelection & JSXBase.HTMLAttributes<HTMLCameraSelectionElement>;
+            "cursorly-spinner": LocalJSX.CursorlySpinner & JSXBase.HTMLAttributes<HTMLCursorlySpinnerElement>;
             "gesture-detector": LocalJSX.GestureDetector & JSXBase.HTMLAttributes<HTMLGestureDetectorElement>;
             "screen-selection": LocalJSX.ScreenSelection & JSXBase.HTMLAttributes<HTMLScreenSelectionElement>;
             "settings-component": LocalJSX.SettingsComponent & JSXBase.HTMLAttributes<HTMLSettingsComponentElement>;

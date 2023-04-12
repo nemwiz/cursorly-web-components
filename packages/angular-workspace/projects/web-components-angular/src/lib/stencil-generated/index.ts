@@ -7,6 +7,7 @@ export const DIRECTIVES = [
   d.CameraPermissionInfo,
   d.CameraPermissionPrompt,
   d.CameraSelection,
+  d.CursorlySpinner,
   d.GestureDetector,
   d.ScreenSelection,
   d.SettingsComponent

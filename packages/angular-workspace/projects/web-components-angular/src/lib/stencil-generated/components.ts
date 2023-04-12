@@ -11,6 +11,7 @@ import { defineCustomElement as defineCameraPermissionDenied } from '@cursorly/w
 import { defineCustomElement as defineCameraPermissionInfo } from '@cursorly/web-components/components/camera-permission-info.js';
 import { defineCustomElement as defineCameraPermissionPrompt } from '@cursorly/web-components/components/camera-permission-prompt.js';
 import { defineCustomElement as defineCameraSelection } from '@cursorly/web-components/components/camera-selection.js';
+import { defineCustomElement as defineCursorlySpinner } from '@cursorly/web-components/components/cursorly-spinner.js';
 import { defineCustomElement as defineGestureDetector } from '@cursorly/web-components/components/gesture-detector.js';
 import { defineCustomElement as defineScreenSelection } from '@cursorly/web-components/components/screen-selection.js';
 import { defineCustomElement as defineSettingsComponent } from '@cursorly/web-components/components/settings-component.js';
@@ -147,6 +148,29 @@ export declare interface CameraSelection extends Components.CameraSelection {
    */
   cameraSelected: EventEmitter<CustomEvent<MediaDeviceInfo>>;
 }
+
+
+@ProxyCmp({
+  defineCustomElementFn: defineCursorlySpinner,
+  inputs: ['size']
+})
+@Component({
+  selector: 'cursorly-spinner',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['size'],
+})
+export class CursorlySpinner {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface CursorlySpinner extends Components.CursorlySpinner {}
 
 
 @ProxyCmp({
