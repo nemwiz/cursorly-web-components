@@ -173,7 +173,7 @@ export class GestureDetector {
   render() {
     return (
       <div style={{position: 'relative'}}>
-        <video id='webcam' autoPlay playsInline style={{transform: 'scale(-1, 1)'}}></video>
+        <video id='webcam' autoPlay playsInline style={{transform: 'scale(-1, 1)', position: 'unset'}}></video>
         <canvas id='output_canvas' width='1280' height='720'
                 style={{
                   position: 'absolute',
