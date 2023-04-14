@@ -22,46 +22,49 @@ export class ScreenSelection {
   screensInfo: Screen[] = [];
 
   @State()
-  isSingleScreen: boolean = false;
+  isMultiDisplay: boolean = false;
 
   componentWillRender() {
     this.screensInfo = JSON.parse(this.screens);
   }
 
   async componentDidLoad() {
-    this.screenSelected.emit({isSingleScreen: this.isSingleScreen, screen: this.screensInfo[0]});
+    this.screenSelected.emit({isSingleScreen: !this.isMultiDisplay, screen: this.screensInfo[0]});
   }
 
   render() {
     return (
       <Host>
-
-        <div class="form-ext-control no-padding-form-control">
-          <label class="form-ext-toggle__label">
-            <span>Multi-display</span>
-            <div class="form-ext-toggle form-ext-toggle--dark">
-              <input type="checkbox" class="form-ext-input"
-                     checked={this.isSingleScreen}
-                     onChange={() => this.isSingleScreen = !this.isSingleScreen}/>
-              <div class="form-ext-toggle__toggler"><i></i></div>
+        {this.screensInfo.length >= 2 ?
+          <div>
+            <div class="form-ext-control no-padding-form-control">
+              <label class="form-ext-toggle__label">
+                <span>Multi-display</span>
+                <div class="form-ext-toggle form-ext-toggle--dark">
+                  <input type="checkbox" class="form-ext-input"
+                         checked={this.isMultiDisplay}
+                         onChange={() => this.isMultiDisplay = !this.isMultiDisplay}/>
+                  <div class="form-ext-toggle__toggler"><i></i></div>
+                </div>
+              </label>
             </div>
-          </label>
-        </div>
 
-        <div class="input-control mt-2">
-          <label>Display name</label>
-          <select class="select" disabled={this.isSingleScreen} onChange={(event: Event) => {
-            const selectedScreen = this.screensInfo.find(s => s.screenId === parseInt((event.target as HTMLSelectElement).value));
-            this.screenSelected.emit({isSingleScreen: this.isSingleScreen, screen: selectedScreen});
-          }}>
-            {this.screensInfo.map(screen =>
-              <option value={screen.screenId}>
-                {screen.name}
-              </option>
-            )}
-          </select>
-        </div>
-
+            <div class="input-control mt-2">
+              <label>Display name</label>
+              <select class="select" disabled={this.isMultiDisplay} onChange={(event: Event) => {
+                const selectedScreen = this.screensInfo.find(s => s.screenId === parseInt((event.target as HTMLSelectElement).value));
+                this.screenSelected.emit({isSingleScreen: !this.isMultiDisplay, screen: selectedScreen});
+              }}>
+                {this.screensInfo.map(screen =>
+                  <option value={screen.screenId}>
+                    {screen.name}
+                  </option>
+                )}
+              </select>
+            </div>
+          </div>
+          : null
+        }
       </Host>
     );
   }

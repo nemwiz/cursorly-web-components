@@ -6,6 +6,9 @@ import {Settings} from '../../model/settings';
 
 @Component({
   tag: 'settings-component',
+  styles: `.no-padding-form-control {
+  padding: 0! important;
+  }`,
   shadow: false,
 })
 export class SettingsComponent {
