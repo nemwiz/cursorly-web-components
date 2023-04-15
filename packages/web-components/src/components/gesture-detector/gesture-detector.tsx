@@ -1,4 +1,4 @@
-import {Component, h, Prop} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {drawLandmarks} from '@mediapipe/drawing_utils';
@@ -94,6 +94,9 @@ export class GestureDetector {
   @Prop()
   websocketUrl: string;
 
+  @State()
+  isStarted: boolean = false;
+
   isStreaming: boolean = false;
   webcam!: HTMLVideoElement;
   canvas!: HTMLCanvasElement;
@@ -122,6 +125,7 @@ export class GestureDetector {
 
   async componentDidLoad() {
     await createGestureRecognizer();
+    this.isStarted = true;
     this.webcam = document.getElementById('webcam') as HTMLVideoElement;
     this.canvas = document.getElementById('output_canvas') as HTMLCanvasElement;
     this.canvasContext = this.canvas.getContext('2d');
@@ -177,7 +181,11 @@ export class GestureDetector {
           transform: 'rotateY(180deg)',
           '-webkit-transform': 'rotateY(180deg)',
           '-moz-transform': 'rotateY(180deg)',
-          position: 'unset'
+          position: 'unset',
+          width: VIDEO_WIDTH,
+          height: VIDEO_HEIGHT,
+          visibility: this.isStarted ? 'visible' : 'hidden',
+          maxWidth: 'unset'
         }}></video>
         <canvas id='output_canvas' width='1280' height='720'
                 style={{
@@ -186,7 +194,9 @@ export class GestureDetector {
                   top: '0px',
                   transform: 'rotateY(180deg)',
                   '-webkit-transform': 'rotateY(180deg)',
-                  '-moz-transform': 'rotateY(180deg)'
+                  '-moz-transform': 'rotateY(180deg)',
+                  visibility: this.isStarted ? 'visible' : 'hidden',
+                  maxWidth: 'unset'
                 }}></canvas>
       </div>
     );
