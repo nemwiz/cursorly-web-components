@@ -24,12 +24,20 @@ export class ScreenSelection {
   @State()
   isMultiDisplay: boolean = false;
 
+  @State()
+  selectedScreen: Screen;
+
   componentWillRender() {
     this.screensInfo = JSON.parse(this.screens);
   }
 
   async componentDidLoad() {
-    this.screenSelected.emit({isSingleScreen: !this.isMultiDisplay, screen: this.screensInfo[0]});
+    this.selectedScreen = this.screensInfo[0];
+    this.emitChanges();
+  }
+
+  emitChanges() {
+    this.screenSelected.emit({isSingleScreen: !this.isMultiDisplay, screen: this.selectedScreen});
   }
 
   render() {
@@ -43,7 +51,10 @@ export class ScreenSelection {
                 <div class="form-ext-toggle form-ext-toggle--dark">
                   <input type="checkbox" class="form-ext-input"
                          checked={this.isMultiDisplay}
-                         onChange={() => this.isMultiDisplay = !this.isMultiDisplay}/>
+                         onChange={() => {
+                           this.isMultiDisplay = !this.isMultiDisplay;
+                           this.emitChanges();
+                         }}/>
                   <div class="form-ext-toggle__toggler"><i></i></div>
                 </div>
               </label>
@@ -53,7 +64,8 @@ export class ScreenSelection {
               <label>Display name</label>
               <select class="select" disabled={this.isMultiDisplay} onChange={(event: Event) => {
                 const selectedScreen = this.screensInfo.find(s => s.screenId === parseInt((event.target as HTMLSelectElement).value));
-                this.screenSelected.emit({isSingleScreen: !this.isMultiDisplay, screen: selectedScreen});
+                this.selectedScreen = selectedScreen;
+                this.emitChanges();
               }}>
                 {this.screensInfo.map(screen =>
                   <option value={screen.screenId}>
