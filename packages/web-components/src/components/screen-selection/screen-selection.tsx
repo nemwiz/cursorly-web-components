@@ -19,19 +19,17 @@ export class ScreenSelection {
   @Prop()
   screens: string = '';
 
+  selectedScreen: Screen;
   screensInfo: Screen[] = [];
 
   @State()
   isMultiDisplay: boolean = false;
 
-  @State()
-  selectedScreen: Screen;
-
   componentWillRender() {
     this.screensInfo = JSON.parse(this.screens);
   }
 
-  async componentDidLoad() {
+  componentDidLoad() {
     this.selectedScreen = this.screensInfo[0];
     this.emitChanges();
   }

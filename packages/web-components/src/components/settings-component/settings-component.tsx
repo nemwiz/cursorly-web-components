@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {ScreenSettings} from '../../model/screen';
@@ -34,9 +34,6 @@ export class SettingsComponent {
   selectedCamera: MediaDeviceInfo | undefined;
   selectedScreen: ScreenSettings | undefined;
 
-  @State()
-  notifications: boolean = true;
-
   async setSettings() {
     const settings = {
       airTouchpad: {
@@ -47,7 +44,7 @@ export class SettingsComponent {
         screenId: this.selectedScreen?.screen.screenId,
         isSingleScreen: this.selectedScreen?.isSingleScreen
       },
-      notifications: this.notifications
+      notifications: false
     }
 
     this.settingsChanged.emit(settings);
@@ -69,21 +66,6 @@ export class SettingsComponent {
                             this.selectedScreen = event.detail;
                             await this.setSettings();
                           }}></screen-selection>
-
-        <div class="form-ext-control no-padding-form-control mt-2">
-          <label class="form-ext-toggle__label"><span>Notifications</span>
-            <div class="form-ext-toggle form-ext-toggle--dark">
-              <input type="checkbox"
-                     class="form-ext-input"
-                     checked={this.notifications}
-                     onChange={async () => {
-                       this.notifications = !this.notifications;
-                       await this.setSettings();
-                     }}/>
-              <div class="form-ext-toggle__toggler"><i></i></div>
-            </div>
-          </label>
-        </div>
 
       </div>
     );

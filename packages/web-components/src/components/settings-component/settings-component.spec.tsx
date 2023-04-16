@@ -49,7 +49,7 @@ describe('settings-component', () => {
         screenId: dummyScreen.screen.screenId,
         isSingleScreen: dummyScreen.isSingleScreen
       },
-      notifications: true
+      notifications: false
     });
   });
 });
