@@ -1,6 +1,7 @@
 {
   "name": "@cursorly/web-components-angular",
   "version": "0.0.4-alpha.0",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
