@@ -69,6 +69,10 @@ export interface CameraSelectionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLCameraSelectionElement;
 }
+export interface GestureDetectorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLGestureDetectorElement;
+}
 export interface ScreenSelectionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLScreenSelectionElement;
@@ -186,6 +190,10 @@ declare namespace LocalJSX {
           * The device id of selected camera
          */
         "cameraId"?: string;
+        /**
+          * Event that fires off when one of the supported gestures is detected
+         */
+        "onGestureDetected"?: (event: GestureDetectorCustomEvent<string>) => void;
         /**
           * The url where websocket server is running. It should be in format host:port e.g. localhost:1234
          */

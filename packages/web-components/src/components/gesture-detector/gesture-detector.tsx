@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import '@mediapipe/drawing_utils';
 import '@mediapipe/hands';
 import {drawLandmarks} from '@mediapipe/drawing_utils';
@@ -94,6 +94,12 @@ export class GestureDetector {
   @Prop()
   websocketUrl: string;
 
+   /**
+   * Event that fires off when one of the supported gestures is detected
+   */
+  @Event({eventName: 'gestureDetected'})
+  gestureDetected: EventEmitter<string>;
+
   @State()
   isStarted: boolean = false;
 
@@ -164,6 +170,8 @@ export class GestureDetector {
           this.isTouchpadBoxOpen = false;
           break;
       }
+
+      this.gestureDetected.emit(websocketEvent.name);
 
     });
   }

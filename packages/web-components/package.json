@@ -2,7 +2,7 @@
   "name": "@cursorly/web-components",
   "version": "0.0.6-alpha.0",
   "description": "Cursorly web components",
-  "main": "dist/web-components/web-components.esm.js",
+  "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",

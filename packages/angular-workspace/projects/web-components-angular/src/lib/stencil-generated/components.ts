@@ -189,11 +189,17 @@ export class GestureDetector {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['gestureDetected']);
   }
 }
 
 
-export declare interface GestureDetector extends Components.GestureDetector {}
+export declare interface GestureDetector extends Components.GestureDetector {
+  /**
+   * Event that fires off when one of the supported gestures is detected
+   */
+  gestureDetected: EventEmitter<CustomEvent<string>>;
+}
 
 
 @ProxyCmp({

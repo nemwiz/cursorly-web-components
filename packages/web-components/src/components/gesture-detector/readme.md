@@ -13,6 +13,13 @@
 | `websocketUrl` | `websocket-url` | The url where websocket server is running. It should be in format host:port e.g. localhost:1234 | `string` | `undefined` |
 
 
+## Events
+
+| Event             | Description                                                         | Type                  |
+| ----------------- | ------------------------------------------------------------------- | --------------------- |
+| `gestureDetected` | Event that fires off when one of the supported gestures is detected | `CustomEvent<string>` |
+
+
 ----------------------------------------------
 
 Built by Cursorly
