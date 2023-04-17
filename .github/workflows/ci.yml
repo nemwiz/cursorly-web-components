@@ -17,6 +17,7 @@ jobs:
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
+          scope: '@octocat'
 
       - name: Install
         run: yarn install --frozen-lockfile

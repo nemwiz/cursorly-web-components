@@ -14,7 +14,7 @@
     "build": "lerna run build --scope @cursorly/web-components",
     "build-storybook": "storybook build",
     "generate": "lerna run generate --scope @cursorly/web-components",
-    "publish:packages": "lerna publish",
+    "publish:packages": "lerna publish --no-private",
     "start": "lerna run start --scope @cursorly/web-components",
     "storybook": "storybook dev -p 6006 --no-open",
     "test": "lerna run test --scope @cursorly/web-components"

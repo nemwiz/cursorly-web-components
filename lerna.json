@@ -8,22 +8,8 @@
     "packages/*"
   ],
   "command": {
-    "version": {
-      "noChangelog": true,
-      "noCommitHooks": true,
-      "noGitTagVersion": true,
-      "noPush": true,
-      "forcePublish": true
-    },
     "publish": {
-      "noGitReset": true,
-      "verifyAccess": false,
-      "registry": "http://localhost:4873",
-      "noChangelog": true,
-      "noCommitHooks": true,
-      "noGitTagVersion": true,
-      "noPush": true,
-      "forcePublish": true
+      "registry": "http://localhost:4873"
     }
   }
 }
