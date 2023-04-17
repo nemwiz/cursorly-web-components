@@ -67,7 +67,7 @@ export class ScreenSelection {
               }}>
                 {this.screensInfo.map(screen =>
                   <option value={screen.screenId}>
-                    {screen.name}
+                    {screen.name} Hello
                   </option>
                 )}
               </select>
