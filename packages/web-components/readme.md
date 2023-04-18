@@ -20,7 +20,7 @@ In your `index.html` file:
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge;"/>
 
-    <script type="module" src="https://www.unpkg.com/@cursorly/web-components@1.0.0/dist/web-components/web-components.esm.js"></script>
+    <script type="module" src="https://www.unpkg.com/@cursorly/web-components@0.0.6-alpha.4/dist/web-components/web-components.esm.js"></script>
   
 </head>
 <body>
