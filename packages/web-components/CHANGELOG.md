@@ -1,3 +1,16 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 0.0.6-alpha.1 (2023-04-18)
+
+**Note:** Version bump only for package @cursorly/web-components
+
+
+
+
+
 ## [0.0.6-alpha.0](https://github.com/nemwiz/cursorly-web-components/compare/v0.0.5-alpha.0...v0.0.6-alpha.0) (2023-04-16)
 
 
@@ -46,6 +59,3 @@
 ### Features
 
 * sets up media pipe and camera selection ([4930307](https://github.com/nemwiz/cursorly-web-components/commit/4930307dad2e698f8451d203ab57f7000b27e827))
-
-
-
