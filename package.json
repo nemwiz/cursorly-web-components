@@ -6,7 +6,7 @@
   "repository": "https://github.com/nemwiz/cursorly-web-components.git",
   "author": "N/A",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "workspaces": [
     "packages/*"
   ],
