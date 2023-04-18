@@ -30,6 +30,6 @@ jobs:
 
 
       - name: Publish
-        run: yarn publish
+        run: yarn publish:packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
