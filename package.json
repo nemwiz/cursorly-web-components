@@ -17,7 +17,8 @@
     "publish:packages": "lerna publish --no-private --conventional-commits --yes",
     "start": "lerna run start --scope @cursorly/web-components",
     "storybook": "storybook dev -p 6006 --no-open",
-    "test": "lerna run test --scope @cursorly/web-components"
+    "test": "lerna run test --scope @cursorly/web-components",
+    "check:updates": "lerna exec npx npm-check-updates --stream --scope @cursorly/web-components"
   },
   "publishConfig": {
     "access": "public",
@@ -44,7 +45,7 @@
   },
   "peerDependencies": {},
   "volta": {
-    "node": "16.15.1",
+    "node": "16.20.0",
     "yarn": "1.22.19"
   }
 }
