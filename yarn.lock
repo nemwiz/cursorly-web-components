@@ -206,9 +206,9 @@
     tslib "^2.3.0"
 
 "@angular/router@^15.2.0":
-  version "15.2.5"
-  resolved "https://registry.npmjs.org/@angular/router/-/router-15.2.5.tgz"
-  integrity sha512-NSEfx2wgPCS8EdXLbKUjNCXC29cMqEGDUrSv8+P/O+tY21Szkqp6uzGTOZJuSTOoKQmDEw9CRmuwxMKm2l6y/Q==
+  version "15.2.8"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-15.2.8.tgz#99ebf83d34dae3ebe61097b43aded3743b49c5db"
+  integrity sha512-C62QBEeJSBTNTrQHZiklPrxwJwuENoZzWX22MMJ7dxl+7VjRgnmj8J7mcX9fLjHlL+mC3RvesMlX7sGZRQV1cg==
   dependencies:
     tslib "^2.3.0"
 
