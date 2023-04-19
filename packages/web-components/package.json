@@ -41,7 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@stencil/angular-output-target": "^0.6.0",
-    "@types/jest": "^27.5.2",
+    "@types/jest": "^29.5.1",
     "@types/node": "^18.15.11",
     "babel-loader": "^9.1.2",
     "http-server": "^14.1.1",
