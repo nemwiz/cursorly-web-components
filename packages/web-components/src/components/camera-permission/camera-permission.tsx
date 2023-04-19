@@ -74,8 +74,10 @@ export class CameraPermission {
   }
 
   disconnectedCallback() {
-    this.permissions.removeEventListener('change', () => {
-    });
+    if (this.permissions) {
+      this.permissions.removeEventListener('change', () => {
+      });
+    }
   }
 
   render() {
