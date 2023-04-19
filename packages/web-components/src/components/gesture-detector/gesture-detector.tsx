@@ -7,7 +7,8 @@ import {createGestureRecognizer, detect} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
 
-const VIDEO_HEIGHT = '400px';
+const VIDEO_HEIGHT_RAW = 400;
+const VIDEO_HEIGHT = `${VIDEO_HEIGHT_RAW}px`;
 const VIDEO_WIDTH = '520px';
 
 declare global {
@@ -94,7 +95,7 @@ export class GestureDetector {
   @Prop()
   websocketUrl: string;
 
-   /**
+  /**
    * Event that fires off when one of the supported gestures is detected
    */
   @Event({eventName: 'gestureDetected'})
@@ -185,6 +186,16 @@ export class GestureDetector {
   render() {
     return (
       <div style={{position: 'relative'}}>
+
+        {
+          !this.isStarted
+            ? <div class='u-absolute' style={{top: `${VIDEO_HEIGHT_RAW / 2}px`, left: '33%'}}>
+              <cursorly-spinner size={'large'}></cursorly-spinner>
+              <p>Almost there! We are assembling the final pieces...</p>
+            </div>
+            : null
+        }
+
         <video id='webcam' autoPlay playsInline style={{
           transform: 'rotateY(180deg)',
           '-webkit-transform': 'rotateY(180deg)',

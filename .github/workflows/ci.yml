@@ -28,8 +28,8 @@ jobs:
       - name: Build
         run: yarn build
 
-
       - name: Publish
+        if: endsWith(github.ref, '/main')
         run: |
           git config user.name "Cursorly pipeline"
           git config user.email "support@cursorly.app"
