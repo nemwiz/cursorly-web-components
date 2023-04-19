@@ -20,6 +20,19 @@
 | `gestureDetected` | Event that fires off when one of the supported gestures is detected | `CustomEvent<string>` |
 
 
+## Dependencies
+
+### Depends on
+
+- [cursorly-spinner](../cursorly-spinner)
+
+### Graph
+```mermaid
+graph TD;
+  gesture-detector --> cursorly-spinner
+  style gesture-detector fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 Built by Cursorly

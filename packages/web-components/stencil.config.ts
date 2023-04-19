@@ -5,6 +5,21 @@ export const config: Config = {
   namespace: 'web-components',
   devServer: undefined,
   sourceMap: true,
+  bundles: [
+    {
+      components: [
+        'camera-permission',
+        'camera-permission-denied',
+        'camera-permission-info',
+        'camera-permission-prompt',
+        'camera-selection',
+        'cursorly-spinner',
+        'gesture-detector',
+        'screen-selection',
+        'settings-component',
+      ]
+    }
+  ],
   outputTargets: [
     {
       type: 'dist',
