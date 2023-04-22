@@ -119,12 +119,13 @@ export class GestureDetector {
     x: 0,
     y: 0,
     width: 0,
-    height: 0
+    height: 0,
+    isCursorStable: false
   }
 
   drawTouchpadBox() {
     if (this.isTouchpadBoxOpen) {
-      this.canvasContext.strokeStyle = '#ff9800';
+      this.canvasContext.strokeStyle = this.touchpadBox.isCursorStable ? '#31c48d' : '#ff8a4c';
       this.canvasContext.lineWidth = 12;
       this.canvasContext.strokeRect(this.touchpadBox.x, this.touchpadBox.y, this.touchpadBox.width, this.touchpadBox.height);
     }
@@ -169,6 +170,12 @@ export class GestureDetector {
           break;
         case WebsocketEvents.TOUCHPAD_BOX_CLOSE:
           this.isTouchpadBoxOpen = false;
+          break;
+        case WebsocketEvents.STABILIZE_CURSOR_START:
+          this.touchpadBox.isCursorStable = true
+          break;
+        case WebsocketEvents.STABILIZE_CURSOR_STOP:
+          this.touchpadBox.isCursorStable = false
           break;
       }
 
