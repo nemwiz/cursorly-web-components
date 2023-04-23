@@ -1,0 +1,11 @@
+export const DEFAULT_ANIMATION_FRAME_ID = -1;
+export const TOUCHPAD_BOX_BORDER_WIDTH = 5;
+export const TOUCHPAD_BOX_ORANGE = '#ff8a4c';
+export const TOUCHPAD_BOX_GREEN = '#31c48d';
+export const CURSOR_POINT_SIZE = 6;
+export const CURSOR_POINT_COLOR = '#ff0000';
+export const INDEX_FINGER_ROOT = 5;
+export const VIDEO_HEIGHT_RAW = 400;
+export const VIDEO_HEIGHT = `${VIDEO_HEIGHT_RAW}px`;
+export const VIDEO_WIDTH_RAW = 520;
+export const VIDEO_WIDTH = `${VIDEO_WIDTH_RAW}px`;

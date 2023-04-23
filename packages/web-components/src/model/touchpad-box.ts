@@ -3,5 +3,6 @@ export interface TouchpadBox {
   y: number;
   width: number;
   height: number;
+  isTouchpadBoxOpen: boolean;
   isCursorStable?: boolean;
 }
