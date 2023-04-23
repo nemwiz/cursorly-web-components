@@ -1,5 +1,5 @@
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
-import {createGestureRecognizer, createOffscreenCanvas, detect, getAnimationFrameId} from './detection.worker';
+import {createGestureRecognizer, createOffscreenCanvas, detectAndGetCoordinates, getAnimationFrameId} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
 import {DEFAULT_ANIMATION_FRAME_ID, VIDEO_HEIGHT, VIDEO_HEIGHT_RAW, VIDEO_WIDTH} from './gesture-detector-constants';
@@ -31,23 +31,11 @@ async function detectGesture() {
   this.offscreenCanvas.style.width = VIDEO_WIDTH;
   this.webcam.style.width = VIDEO_WIDTH;
 
-  const bitmap = await createImageBitmap(this.webcam);
-  const gesture = await detect(bitmap, this.touchpadBox);
+  const cameraFrame = await createImageBitmap(this.webcam);
+  const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox);
 
-  if (gesture.landmarks && gesture.landmarks.length !== 0) {
-
-    if (this.isSocketOpen) {
-      this.socket.send(JSON.stringify({
-        landmarks: gesture.landmarks,
-        gestures: gesture.gestures,
-        handedness: gesture.handednesses,
-        frame: {
-          width: this.offscreenCanvas.width,
-          height: this.offscreenCanvas.height
-        }
-      }));
-    }
-
+  if (this.isSocketOpen && coordinates !== null) {
+      this.socket.send(coordinates);
   }
 
   // Call this function again to keep predicting when the browser is ready.
