@@ -286,4 +286,46 @@ describe('gesture-detector', () => {
     expect(gestureDetector.isStreaming).toEqual(false);
     expect(windowSpy).toHaveBeenCalledWith(dummyAnimationId);
   });
+  it('continues detection when running in background tab', async () => {
+
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      get: () => true
+    });
+
+    Object.defineProperty(global, 'MediaRecorder', {
+      writable: true,
+      value: jest.fn().mockImplementation(() => (
+        {
+          start: jest.fn(),
+          ondatavailable: jest.fn(),
+          stop: jest.fn(),
+        }
+      ))
+    });
+
+    const gestureDetector = new GestureDetector();
+
+    await gestureDetector.userSwitchedToAnotherTabOrMinimizedTheWindow();
+
+    expect(gestureDetector.isRunningInBackground).toEqual(true);
+    expect(gestureDetector.mediaRecorder.start).toHaveBeenCalled();
+  });
+  it('stops the media recorder when user switches back from background tab', async () => {
+
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      get: () => false
+    });
+
+    const gestureDetector = new GestureDetector();
+    gestureDetector.mediaRecorder = {
+      stop: jest.fn()
+    } as unknown as MediaRecorder;
+
+    await gestureDetector.userSwitchedToAnotherTabOrMinimizedTheWindow();
+
+    expect(gestureDetector.isRunningInBackground).toEqual(false);
+    expect(gestureDetector.mediaRecorder.stop).toHaveBeenCalled();
+  });
 });

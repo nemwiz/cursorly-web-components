@@ -51,15 +51,17 @@ export const drawToCanvas = (gesture: GestureRecognizerResult, touchpadBox: Touc
   canvasContext.restore();
 }
 
-export const detectAndGetCoordinates = async (cameraFrame: ImageBitmap, touchpadBox: TouchpadBox): Promise<string | null> => {
+export const detectAndGetCoordinates = async (cameraFrame: ImageBitmap, touchpadBox: TouchpadBox, isRunningInBackground: boolean): Promise<string | null> => {
 
   const gesture = recognizer.recognizeForVideo(cameraFrame, Date.now());
   offscreenCanvas.height = VIDEO_HEIGHT_RAW;
   offscreenCanvas.width = VIDEO_WIDTH_RAW;
 
-  requestAnimationFrameId = requestAnimationFrame(() => {
-    drawToCanvas(gesture, touchpadBox);
-  });
+  if (!isRunningInBackground) {
+    requestAnimationFrameId = requestAnimationFrame(() => {
+      drawToCanvas(gesture, touchpadBox);
+    });
+  }
 
   if (gesture.landmarks && gesture.landmarks.length !== 0) {
     return JSON.stringify({

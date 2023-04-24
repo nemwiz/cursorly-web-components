@@ -20,6 +20,9 @@ export const config: Config = {
       ]
     }
   ],
+  testing: {
+    modulePathIgnorePatterns: ['dist']
+  },
   outputTargets: [
     {
       type: 'dist',

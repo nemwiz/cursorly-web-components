@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Listen, Prop, State} from '@stencil/core';
 import {createGestureRecognizer, createOffscreenCanvas, detectAndGetCoordinates, getAnimationFrameId} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
@@ -10,6 +10,7 @@ function startCamera() {
     video: {
       deviceId: this.cameraId
     },
+    audio: false
   };
 
   navigator.mediaDevices.getUserMedia(userMediaOptions).then((stream) => {
@@ -32,14 +33,17 @@ async function detectGesture() {
   this.webcam.style.width = VIDEO_WIDTH;
 
   const cameraFrame = await createImageBitmap(this.webcam);
-  const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox);
+  const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox, this.isRunningInBackground);
 
   if (this.isSocketOpen && coordinates !== null) {
-      this.socket.send(coordinates);
+    this.socket.send(coordinates);
   }
 
-  // Call this function again to keep predicting when the browser is ready.
-  this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
+  if (!this.isRunningInBackground) {
+    // Call this function again to keep predicting when the browser is ready.
+    this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
+  }
+
 }
 
 @Component({
@@ -69,10 +73,14 @@ export class GestureDetector {
   @State()
   isStarted: boolean = false;
 
+  @State()
+  isRunningInBackground: boolean = false;
+
   isStreaming: boolean = false;
   webcam!: HTMLVideoElement;
   offscreenCanvas!: HTMLCanvasElement;
   currentVideoStream: MediaStream;
+  mediaRecorder: MediaRecorder;
   animationFrameId: number;
 
   socket: WebSocket;
@@ -85,6 +93,26 @@ export class GestureDetector {
     height: 0,
     isTouchpadBoxOpen: false,
     isCursorStable: false
+  }
+
+  @Listen('visibilitychange', {target: 'window'})
+  async userSwitchedToAnotherTabOrMinimizedTheWindow() {
+    this.isRunningInBackground = document.hidden;
+
+    if (this.isRunningInBackground) {
+      this.mediaRecorder = new MediaRecorder(this.currentVideoStream);
+      this.mediaRecorder.start(60)
+
+      this.mediaRecorder.ondataavailable = () => {
+        if (this.mediaRecorder.state === 'recording') {
+          detectGesture.apply(this);
+        }
+      }
+    } else {
+      if (this.mediaRecorder) {
+        this.mediaRecorder.stop();
+      }
+    }
   }
 
   async componentDidLoad() {
@@ -158,7 +186,8 @@ export class GestureDetector {
 
         {
           !this.isStarted
-            ? <div class='u-absolute' style={{top: `${VIDEO_HEIGHT_RAW / 2}px`, left: '33%'}}>
+            ? <div class='u-absolute u-flex u-flex-column u-items-center u-justify-center'
+                   style={{top: `${VIDEO_HEIGHT_RAW / 2}px`, width: VIDEO_WIDTH}}>
               <cursorly-spinner size={'large'}></cursorly-spinner>
               <p>Almost there! We are assembling the final pieces...</p>
             </div>
