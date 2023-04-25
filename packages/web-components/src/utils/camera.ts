@@ -1,5 +1,6 @@
 export const getDevices = async () => {
-  const mediaDevices = await navigator.mediaDevices.enumerateDevices()
+  await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+  const mediaDevices = await navigator.mediaDevices.enumerateDevices();
   return mediaDevices
     .filter(mediaDevice => mediaDevice.kind === 'videoinput');
 }

@@ -21,8 +21,8 @@ export class CameraSelection {
       this.cameras = await getDevices();
       this.cameraSelected.emit(this.cameras[0]);
     } catch (e) {
-      // TODO - think about error handling here, maybe we don't need it if permissions api works
-      console.log('eee', e)
+      console.log('There was an error while setting up the camera', e);
+      this.cameraSelected.emit(null);
     }
   }
 
