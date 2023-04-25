@@ -32,19 +32,22 @@ export class CameraSelection {
         <div>
           <label>Camera</label>
         </div>
-
-        <div class="input-control">
-          <select class="select" onChange={(event: Event) => {
-            const selectedCamera = this.cameras.find(c => c.deviceId === (event.target as HTMLSelectElement).value);
-            this.cameraSelected.emit(selectedCamera);
-          }}>
-            {this.cameras.map(camera =>
-              <option value={camera.deviceId}>
-                {camera.label}
-              </option>
-            )}
-          </select>
-        </div>
+        {
+          this.cameras.length !== 0
+            ? <div class="input-control">
+              <select class="select" onChange={(event: Event) => {
+                const selectedCamera = this.cameras.find(c => c.deviceId === (event.target as HTMLSelectElement).value);
+                this.cameraSelected.emit(selectedCamera);
+              }}>
+                {this.cameras.map(camera =>
+                  <option value={camera.deviceId}>
+                    {camera.label}
+                  </option>
+                )}
+              </select>
+            </div>
+            : <cursorly-spinner></cursorly-spinner>
+        }
       </Host>
     );
   }

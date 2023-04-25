@@ -18,9 +18,14 @@
 
  - [settings-component](../settings-component)
 
+### Depends on
+
+- [cursorly-spinner](../cursorly-spinner)
+
 ### Graph
 ```mermaid
 graph TD;
+  camera-selection --> cursorly-spinner
   settings-component --> camera-selection
   style camera-selection fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -32,6 +32,7 @@
 graph TD;
   settings-component --> camera-selection
   settings-component --> screen-selection
+  camera-selection --> cursorly-spinner
   style settings-component fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
