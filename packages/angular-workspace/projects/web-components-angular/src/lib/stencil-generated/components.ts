@@ -16,14 +16,15 @@ import { defineCustomElement as defineGestureDetector } from '@cursorly/web-comp
 import { defineCustomElement as defineScreenSelection } from '@cursorly/web-components/components/screen-selection.js';
 import { defineCustomElement as defineSettingsComponent } from '@cursorly/web-components/components/settings-component.js';
 @ProxyCmp({
-  defineCustomElementFn: defineCameraPermission
+  defineCustomElementFn: defineCameraPermission,
+  inputs: ['docsUrl']
 })
 @Component({
   selector: 'camera-permission',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['docsUrl'],
 })
 export class CameraPermission {
   protected el: HTMLElement;
@@ -67,14 +68,14 @@ export declare interface CameraPermissionDenied extends Components.CameraPermiss
 
 @ProxyCmp({
   defineCustomElementFn: defineCameraPermissionInfo,
-  inputs: ['isFirefox']
+  inputs: ['docsUrl', 'isFirefox']
 })
 @Component({
   selector: 'camera-permission-info',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['isFirefox'],
+  inputs: ['docsUrl', 'isFirefox'],
 })
 export class CameraPermissionInfo {
   protected el: HTMLElement;
