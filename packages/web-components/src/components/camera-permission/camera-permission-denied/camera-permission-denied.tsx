@@ -1,10 +1,16 @@
-import {Component, h, Host} from '@stencil/core';
+import {Component, h, Host, Prop} from '@stencil/core';
 
 @Component({
   tag: 'camera-permission-denied',
   shadow: false,
 })
 export class CameraPermissionDenied {
+
+  /**
+   * Url to Cursorly documentation
+   */
+  @Prop()
+  docsUrl: string = '#';
 
   render() {
     return (
@@ -38,8 +44,7 @@ export class CameraPermissionDenied {
           </li>
 
           <li>
-            {/*{// TODO - link to Cursorly docs and privacy statement}*/}
-            <a href={''} target='_blank'>How Cursorly uses your camera</a>
+            <a href={this.docsUrl} target='_blank'>How Cursorly uses your camera</a>
           </li>
         </ul>
 

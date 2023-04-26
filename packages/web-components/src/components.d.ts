@@ -17,6 +17,10 @@ export namespace Components {
         "docsUrl": string;
     }
     interface CameraPermissionDenied {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl": string;
     }
     interface CameraPermissionInfo {
         /**
@@ -168,6 +172,10 @@ declare namespace LocalJSX {
         "onPermissionGranted"?: (event: CameraPermissionCustomEvent<void>) => void;
     }
     interface CameraPermissionDenied {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl"?: string;
     }
     interface CameraPermissionInfo {
         /**

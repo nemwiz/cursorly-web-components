@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property  | Attribute  | Description                   | Type     | Default |
+| --------- | ---------- | ----------------------------- | -------- | ------- |
+| `docsUrl` | `docs-url` | Url to Cursorly documentation | `string` | `'#'`   |
+
+
 ## Dependencies
 
 ### Used by

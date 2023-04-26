@@ -96,7 +96,7 @@ export class CameraPermission {
           ? <camera-permission-prompt></camera-permission-prompt>
           : null}
         {this.currentScreen === PermissionScreens.PERMISSION_DENIED
-          ? <camera-permission-denied></camera-permission-denied>
+          ? <camera-permission-denied docs-url={this.docsUrl}></camera-permission-denied>
           : null}
         {this.currentScreen === PermissionScreens.SPINNER
           ? <cursoly-spinner size={'large'}></cursoly-spinner>

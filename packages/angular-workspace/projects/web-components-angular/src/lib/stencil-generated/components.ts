@@ -45,14 +45,15 @@ export declare interface CameraPermission extends Components.CameraPermission {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCameraPermissionDenied
+  defineCustomElementFn: defineCameraPermissionDenied,
+  inputs: ['docsUrl']
 })
 @Component({
   selector: 'camera-permission-denied',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['docsUrl'],
 })
 export class CameraPermissionDenied {
   protected el: HTMLElement;
