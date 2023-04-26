@@ -21,8 +21,8 @@ export class CameraSelection {
       this.cameras = await getDevices();
       this.cameraSelected.emit(this.cameras[0]);
     } catch (e) {
-      // TODO - think about error handling here, maybe we don't need it if permissions api works
-      console.log('eee', e)
+      console.log('There was an error while setting up the camera', e);
+      this.cameraSelected.emit(null);
     }
   }
 
@@ -32,19 +32,22 @@ export class CameraSelection {
         <div>
           <label>Camera</label>
         </div>
-
-        <div class="input-control">
-          <select class="select" onChange={(event: Event) => {
-            const selectedCamera = this.cameras.find(c => c.deviceId === (event.target as HTMLSelectElement).value);
-            this.cameraSelected.emit(selectedCamera);
-          }}>
-            {this.cameras.map(camera =>
-              <option value={camera.deviceId}>
-                {camera.label}
-              </option>
-            )}
-          </select>
-        </div>
+        {
+          this.cameras.length !== 0
+            ? <div class="input-control">
+              <select class="select" onChange={(event: Event) => {
+                const selectedCamera = this.cameras.find(c => c.deviceId === (event.target as HTMLSelectElement).value);
+                this.cameraSelected.emit(selectedCamera);
+              }}>
+                {this.cameras.map(camera =>
+                  <option value={camera.deviceId}>
+                    {camera.label}
+                  </option>
+                )}
+              </select>
+            </div>
+            : <cursorly-spinner></cursorly-spinner>
+        }
       </Host>
     );
   }

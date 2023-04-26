@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Listen, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Listen, Prop, State} from '@stencil/core';
 import {showPromptForCameraAccess} from '../../utils/camera';
 import {PermissionScreens} from './permission-screens.enum';
 
@@ -13,6 +13,12 @@ export class CameraPermission {
    */
   @Event({eventName: 'permissionGranted'})
   permissionGranted: EventEmitter<void>;
+
+  /**
+   * Url to Cursorly documentation
+   */
+  @Prop()
+  docsUrl: string = '#';
 
   @State()
   currentScreen: PermissionScreens = PermissionScreens.SPINNER;
@@ -84,13 +90,13 @@ export class CameraPermission {
     return (
       <div>
         {this.currentScreen === PermissionScreens.PERMISSION_INFO
-          ? <camera-permission-info is-firefox={this.isFirefox}></camera-permission-info>
+          ? <camera-permission-info is-firefox={this.isFirefox} docs-url={this.docsUrl}></camera-permission-info>
           : null}
         {this.currentScreen === PermissionScreens.PERMISSION_PROMPT
           ? <camera-permission-prompt></camera-permission-prompt>
           : null}
         {this.currentScreen === PermissionScreens.PERMISSION_DENIED
-          ? <camera-permission-denied></camera-permission-denied>
+          ? <camera-permission-denied docs-url={this.docsUrl}></camera-permission-denied>
           : null}
         {this.currentScreen === PermissionScreens.SPINNER
           ? <cursoly-spinner size={'large'}></cursoly-spinner>

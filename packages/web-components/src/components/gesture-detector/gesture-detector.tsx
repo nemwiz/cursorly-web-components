@@ -1,22 +1,8 @@
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
-import '@mediapipe/drawing_utils';
-import '@mediapipe/hands';
-import {drawLandmarks} from '@mediapipe/drawing_utils';
-import {HAND_CONNECTIONS} from '@mediapipe/hands';
-import {createGestureRecognizer, detect} from './detection.worker';
+import {Component, Event, EventEmitter, h, Listen, Prop, State} from '@stencil/core';
+import {createGestureRecognizer, createOffscreenCanvas, detectAndGetCoordinates, getAnimationFrameId} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
-
-const VIDEO_HEIGHT_RAW = 400;
-const VIDEO_HEIGHT = `${VIDEO_HEIGHT_RAW}px`;
-const VIDEO_WIDTH = '520px';
-
-declare global {
-  interface Window {
-    drawLandmarks: typeof drawLandmarks,
-    HAND_CONNECTIONS: typeof HAND_CONNECTIONS
-  }
-}
+import {DEFAULT_ANIMATION_FRAME_ID, VIDEO_HEIGHT, VIDEO_HEIGHT_RAW, VIDEO_WIDTH} from './gesture-detector-constants';
 
 function startCamera() {
 
@@ -24,6 +10,7 @@ function startCamera() {
     video: {
       deviceId: this.cameraId
     },
+    audio: false
   };
 
   navigator.mediaDevices.getUserMedia(userMediaOptions).then((stream) => {
@@ -40,41 +27,23 @@ async function detectGesture() {
     return;
   }
 
-  const bitmap = await createImageBitmap(this.webcam);
-  const gesture = await detect(bitmap);
-
-  this.canvasContext.save();
-  this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-  this.canvas.style.height = VIDEO_HEIGHT;
+  this.offscreenCanvas.style.height = VIDEO_HEIGHT;
   this.webcam.style.height = VIDEO_HEIGHT;
-  this.canvas.style.width = VIDEO_WIDTH;
+  this.offscreenCanvas.style.width = VIDEO_WIDTH;
   this.webcam.style.width = VIDEO_WIDTH;
 
-  this.drawTouchpadBox();
+  const cameraFrame = await createImageBitmap(this.webcam);
+  const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox, this.isRunningInBackground);
 
-  if (gesture.landmarks && gesture.landmarks.length !== 0) {
-
-    window.drawLandmarks(this.canvasContext, [gesture.landmarks[0][5]], {color: '#FF0000', lineWidth: 2});
-
-    if (this.isSocketOpen) {
-      this.socket.send(JSON.stringify({
-        landmarks: gesture.landmarks,
-        gestures: gesture.gestures,
-        handedness: gesture.handednesses,
-        frame: {
-          width: this.canvas.width,
-          height: this.canvas.height
-        }
-      }));
-    }
-
+  if (this.isSocketOpen && coordinates !== null) {
+    this.socket.send(coordinates);
   }
 
-  this.canvasContext.restore();
+  if (!this.isRunningInBackground) {
+    // Call this function again to keep predicting when the browser is ready.
+    this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
+  }
 
-  // Call this function again to keep predicting when the browser is ready.
-  this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
 }
 
 @Component({
@@ -104,29 +73,45 @@ export class GestureDetector {
   @State()
   isStarted: boolean = false;
 
+  @State()
+  isRunningInBackground: boolean = false;
+
   isStreaming: boolean = false;
   webcam!: HTMLVideoElement;
-  canvas!: HTMLCanvasElement;
-  canvasContext: CanvasRenderingContext2D;
-  animationFrameId: number;
+  offscreenCanvas!: HTMLCanvasElement;
   currentVideoStream: MediaStream;
+  mediaRecorder: MediaRecorder;
+  animationFrameId: number;
 
   socket: WebSocket;
   isSocketOpen: boolean = false;
 
-  isTouchpadBoxOpen: boolean = false;
   touchpadBox: TouchpadBox = {
     x: 0,
     y: 0,
     width: 0,
-    height: 0
+    height: 0,
+    isTouchpadBoxOpen: false,
+    isCursorStable: false
   }
 
-  drawTouchpadBox() {
-    if (this.isTouchpadBoxOpen) {
-      this.canvasContext.strokeStyle = '#ff9800';
-      this.canvasContext.lineWidth = 12;
-      this.canvasContext.strokeRect(this.touchpadBox.x, this.touchpadBox.y, this.touchpadBox.width, this.touchpadBox.height);
+  @Listen('visibilitychange', {target: 'window'})
+  async userSwitchedToAnotherTabOrMinimizedTheWindow() {
+    this.isRunningInBackground = document.hidden;
+
+    if (this.isRunningInBackground) {
+      this.mediaRecorder = new MediaRecorder(this.currentVideoStream);
+      this.mediaRecorder.start(60)
+
+      this.mediaRecorder.ondataavailable = () => {
+        if (this.mediaRecorder.state === 'recording') {
+          detectGesture.apply(this);
+        }
+      }
+    } else {
+      if (this.mediaRecorder) {
+        this.mediaRecorder.stop();
+      }
     }
   }
 
@@ -134,10 +119,10 @@ export class GestureDetector {
     await createGestureRecognizer();
     this.isStarted = true;
     this.webcam = document.getElementById('webcam') as HTMLVideoElement;
-    this.canvas = document.getElementById('output_canvas') as HTMLCanvasElement;
-    this.canvasContext = this.canvas.getContext('2d');
+    this.offscreenCanvas = document.getElementById('offscreen_canvas') as HTMLCanvasElement;
+    const workerCanvas = this.offscreenCanvas.transferControlToOffscreen();
+    await createOffscreenCanvas(workerCanvas);
     startCamera.apply(this);
-
     this.socket = new WebSocket(`ws://${this.websocketUrl}`);
 
     this.socket.addEventListener('open', () => {
@@ -153,33 +138,45 @@ export class GestureDetector {
     });
 
     this.socket.addEventListener('message', (event: MessageEvent) => {
-
       const websocketEvent = JSON.parse(event.data) as WebsocketEvent;
-
-      switch (websocketEvent.name) {
-        case WebsocketEvents.TOUCHPAD_BOX_OPEN:
-          const {xMin, yMin, width, height} = websocketEvent.data;
-          this.touchpadBox = {
-            x: xMin,
-            y: yMin,
-            width,
-            height
-          }
-          this.isTouchpadBoxOpen = true
-          break;
-        case WebsocketEvents.TOUCHPAD_BOX_CLOSE:
-          this.isTouchpadBoxOpen = false;
-          break;
-      }
-
-      this.gestureDetected.emit(websocketEvent.name);
-
+      this.handleServerMessage(websocketEvent);
     });
   }
 
-  disconnectedCallback() {
+  handleServerMessage(event: WebsocketEvent) {
+
+    switch (event.name) {
+      case WebsocketEvents.TOUCHPAD_BOX_OPEN:
+        const {xMin, yMin, width, height} = event.data;
+        this.touchpadBox = {
+          x: xMin,
+          y: yMin,
+          width,
+          height,
+          isTouchpadBoxOpen: true
+        }
+        break;
+      case WebsocketEvents.TOUCHPAD_BOX_CLOSE:
+        this.touchpadBox.isTouchpadBoxOpen = false;
+        break;
+      case WebsocketEvents.STABILIZE_CURSOR_START:
+        this.touchpadBox.isCursorStable = true
+        break;
+      case WebsocketEvents.STABILIZE_CURSOR_STOP:
+        this.touchpadBox.isCursorStable = false
+        break;
+    }
+
+    this.gestureDetected.emit(event.name);
+  }
+
+  async disconnectedCallback() {
     this.isStreaming = false;
     this.currentVideoStream.getTracks().forEach(track => track.stop());
+    const offScreenCanvasAnimationId = await getAnimationFrameId();
+    if (offScreenCanvasAnimationId !== DEFAULT_ANIMATION_FRAME_ID) {
+      window.cancelAnimationFrame(offScreenCanvasAnimationId);
+    }
     window.cancelAnimationFrame(this.animationFrameId);
   }
 
@@ -189,7 +186,8 @@ export class GestureDetector {
 
         {
           !this.isStarted
-            ? <div class='u-absolute' style={{top: `${VIDEO_HEIGHT_RAW / 2}px`, left: '33%'}}>
+            ? <div class='u-absolute u-flex u-flex-column u-items-center u-justify-center'
+                   style={{top: `${VIDEO_HEIGHT_RAW / 2}px`, width: VIDEO_WIDTH}}>
               <cursorly-spinner size={'large'}></cursorly-spinner>
               <p>Almost there! We are assembling the final pieces...</p>
             </div>
@@ -206,7 +204,7 @@ export class GestureDetector {
           visibility: this.isStarted ? 'visible' : 'hidden',
           maxWidth: 'unset'
         }}></video>
-        <canvas id='output_canvas' width='1280' height='720'
+        <canvas id='offscreen_canvas' width='1280' height='720'
                 style={{
                   position: 'absolute',
                   left: '0px',

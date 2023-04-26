@@ -11,10 +11,22 @@ export { ScreenSettings } from "./model/screen";
 export { Settings } from "./model/settings";
 export namespace Components {
     interface CameraPermission {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl": string;
     }
     interface CameraPermissionDenied {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl": string;
     }
     interface CameraPermissionInfo {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl": string;
         /**
           * Hides the continue button on Firefox because Permission API for camera is not supported
          */
@@ -151,13 +163,25 @@ declare global {
 declare namespace LocalJSX {
     interface CameraPermission {
         /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl"?: string;
+        /**
           * This event notifies parents components that the user granted permission to use the camera
          */
         "onPermissionGranted"?: (event: CameraPermissionCustomEvent<void>) => void;
     }
     interface CameraPermissionDenied {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl"?: string;
     }
     interface CameraPermissionInfo {
+        /**
+          * Url to Cursorly documentation
+         */
+        "docsUrl"?: string;
         /**
           * Hides the continue button on Firefox because Permission API for camera is not supported
          */

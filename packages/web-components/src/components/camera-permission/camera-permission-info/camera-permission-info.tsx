@@ -18,6 +18,12 @@ export class CameraPermissionInfo {
   @Prop()
   isFirefox: boolean;
 
+  /**
+   * Url to Cursorly documentation
+   */
+  @Prop()
+  docsUrl: string = '#';
+
   render() {
     return (
       <Host>
@@ -25,8 +31,7 @@ export class CameraPermissionInfo {
         <p>By allowing camera access, Cursorly is able to detect your hand gestures and let you move the cursor in a
           touch-free manner.</p>
         <p>
-          {/*{// TODO - link to Cursorly docs and privacy statement}*/}
-          <a href={''} target='_blank'>How Cursorly uses your camera</a>
+          <a href={this.docsUrl} target='_blank'>How Cursorly uses your camera</a>
         </p>
         {this.isFirefox
           ? null

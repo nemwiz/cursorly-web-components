@@ -9,6 +9,7 @@
 
 | Property    | Attribute    | Description                                                                             | Type      | Default     |
 | ----------- | ------------ | --------------------------------------------------------------------------------------- | --------- | ----------- |
+| `docsUrl`   | `docs-url`   | Url to Cursorly documentation                                                           | `string`  | `'#'`       |
 | `isFirefox` | `is-firefox` | Hides the continue button on Firefox because Permission API for camera is not supported | `boolean` | `undefined` |
 
 
