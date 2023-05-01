@@ -2118,10 +2118,10 @@
   resolved "https://registry.npmjs.org/@mediapipe/hands/-/hands-0.4.1675469240.tgz"
   integrity sha512-GxoZvL1mmhJxFxjuyj7vnC++JIuInGznHBin5c7ZSq/RbcnGyfEcJrkM/bMu5K1Mz/2Ko+vEX6/+wewmEHPrHg==
 
-"@mediapipe/tasks-vision@0.1.0-alpha-7":
-  version "0.1.0-alpha-7"
-  resolved "https://registry.npmjs.org/@mediapipe/tasks-vision/-/tasks-vision-0.1.0-alpha-7.tgz"
-  integrity sha512-Ct+yEd1OU1W5MKDtmtujT3jTxFJRTJI4k6j1rjoBDJnlpgvqlvS+f4hKwnc9Ypzwwyjm3ehZ9kMWW1Lc7qLalg==
+"@mediapipe/tasks-vision@0.1.0-alpha-13":
+  version "0.1.0-alpha-13"
+  resolved "https://registry.yarnpkg.com/@mediapipe/tasks-vision/-/tasks-vision-0.1.0-alpha-13.tgz#499aff9be544d03fb7c570ddb7a56657c27b984c"
+  integrity sha512-sHZGxeivP4xqy35Q3fHt1JfeVoKJXDl9CtaYEYRkGtmoqhbiXCV2FNsVT7oYsSroIseKhNsSM/Zeje2/BQocKQ==
 
 "@ndelangen/get-tarball@^3.0.7":
   version "3.0.7"
