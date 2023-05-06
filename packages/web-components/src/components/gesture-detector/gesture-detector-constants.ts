@@ -1,4 +1,3 @@
-export const DEFAULT_ANIMATION_FRAME_ID = -1;
 export const TOUCHPAD_BOX_BORDER_WIDTH = 5;
 export const TOUCHPAD_BOX_ORANGE = '#ff8a4c';
 export const TOUCHPAD_BOX_GREEN = '#31c48d';
