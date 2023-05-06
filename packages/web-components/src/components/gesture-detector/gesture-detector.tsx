@@ -1,8 +1,8 @@
 import {Component, Event, EventEmitter, h, Listen, Prop, State} from '@stencil/core';
-import {createGestureRecognizer, createOffscreenCanvas, detectAndGetCoordinates, getAnimationFrameId} from './detection.worker';
+import {createGestureRecognizer, createOffscreenCanvas, detectAndGetCoordinates} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
-import {DEFAULT_ANIMATION_FRAME_ID, VIDEO_HEIGHT, VIDEO_HEIGHT_RAW, VIDEO_WIDTH} from './gesture-detector-constants';
+import {VIDEO_HEIGHT, VIDEO_HEIGHT_RAW, VIDEO_WIDTH} from './gesture-detector-constants';
 
 function startCamera() {
 
@@ -104,7 +104,7 @@ export class GestureDetector {
       this.mediaRecorder.start(60)
 
       this.mediaRecorder.ondataavailable = () => {
-        if (this.mediaRecorder.state === 'recording') {
+        if (this.mediaRecorder.state === 'recording' || this.mediaRecorder.state === 'inactive') {
           detectGesture.apply(this);
         }
       }
@@ -173,10 +173,6 @@ export class GestureDetector {
   async disconnectedCallback() {
     this.isStreaming = false;
     this.currentVideoStream.getTracks().forEach(track => track.stop());
-    const offScreenCanvasAnimationId = await getAnimationFrameId();
-    if (offScreenCanvasAnimationId !== DEFAULT_ANIMATION_FRAME_ID) {
-      window.cancelAnimationFrame(offScreenCanvasAnimationId);
-    }
     window.cancelAnimationFrame(this.animationFrameId);
   }
 

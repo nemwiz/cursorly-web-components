@@ -4,9 +4,10 @@ import {TouchpadBox} from '../../model/touchpad-box';
 import {
   CURSOR_POINT_COLOR,
   CURSOR_POINT_SIZE,
-  DEFAULT_ANIMATION_FRAME_ID,
   INDEX_FINGER_ROOT,
-  TOUCHPAD_BOX_BORDER_WIDTH, TOUCHPAD_BOX_GREEN, TOUCHPAD_BOX_ORANGE,
+  TOUCHPAD_BOX_BORDER_WIDTH,
+  TOUCHPAD_BOX_GREEN,
+  TOUCHPAD_BOX_ORANGE,
   VIDEO_HEIGHT_RAW,
   VIDEO_WIDTH_RAW
 } from './gesture-detector-constants';
@@ -15,7 +16,6 @@ import {
 let recognizer: GestureRecognizer;
 let offscreenCanvas: OffscreenCanvas;
 let canvasContext: CanvasRenderingContext2D;
-let requestAnimationFrameId = DEFAULT_ANIMATION_FRAME_ID;
 
 export const createOffscreenCanvas = async (canvas: OffscreenCanvas) => {
   offscreenCanvas = canvas
@@ -24,10 +24,6 @@ export const createOffscreenCanvas = async (canvas: OffscreenCanvas) => {
 
 export const createGestureRecognizer = async () => {
   recognizer = await createRecognizer();
-}
-
-export const getAnimationFrameId = async (): Promise<number> => {
-  return requestAnimationFrameId;
 }
 
 export const drawToCanvas = (gesture: GestureRecognizerResult, touchpadBox: TouchpadBox) => {
@@ -58,9 +54,7 @@ export const detectAndGetCoordinates = async (cameraFrame: ImageBitmap, touchpad
   offscreenCanvas.width = VIDEO_WIDTH_RAW;
 
   if (!isRunningInBackground) {
-    requestAnimationFrameId = requestAnimationFrame(() => {
-      drawToCanvas(gesture, touchpadBox);
-    });
+    drawToCanvas(gesture, touchpadBox);
   }
 
   if (gesture.landmarks && gesture.landmarks.length !== 0) {
