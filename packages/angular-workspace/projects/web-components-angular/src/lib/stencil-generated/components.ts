@@ -125,14 +125,15 @@ export declare interface CameraPermissionPrompt extends Components.CameraPermiss
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCameraSelection
+  defineCustomElementFn: defineCameraSelection,
+  inputs: ['cameras']
 })
 @Component({
   selector: 'camera-selection',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['cameras'],
 })
 export class CameraSelection {
   protected el: HTMLElement;
@@ -237,14 +238,14 @@ export declare interface ScreenSelection extends Components.ScreenSelection {
 
 @ProxyCmp({
   defineCustomElementFn: defineSettingsComponent,
-  inputs: ['screens']
+  inputs: ['cameras', 'screens']
 })
 @Component({
   selector: 'settings-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['screens'],
+  inputs: ['cameras', 'screens'],
 })
 export class SettingsComponent {
   protected el: HTMLElement;

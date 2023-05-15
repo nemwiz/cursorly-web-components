@@ -9,6 +9,7 @@
 
 | Property  | Attribute | Description                       | Type     | Default     |
 | --------- | --------- | --------------------------------- | -------- | ----------- |
+| `cameras` | `cameras` | JSON.stringify() array of cameras | `string` | `''`        |
 | `screens` | `screens` | JSON.stringify() array of screens | `string` | `undefined` |
 
 

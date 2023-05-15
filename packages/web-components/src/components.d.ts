@@ -35,6 +35,10 @@ export namespace Components {
     interface CameraPermissionPrompt {
     }
     interface CameraSelection {
+        /**
+          * JSON.stringify() array of cameras
+         */
+        "cameras": string;
     }
     interface CursorlySpinner {
         /**
@@ -59,6 +63,10 @@ export namespace Components {
         "screens": string;
     }
     interface SettingsComponent {
+        /**
+          * JSON.stringify() array of cameras
+         */
+        "cameras": string;
         /**
           * JSON.stringify() array of screens
          */
@@ -199,6 +207,10 @@ declare namespace LocalJSX {
     }
     interface CameraSelection {
         /**
+          * JSON.stringify() array of cameras
+         */
+        "cameras"?: string;
+        /**
           * When a camera gets selected from the dropdown, this event emits [MediaDeviceInfo](https://developer.mozilla.org/en-US/docs/Web/API/MediaDeviceInfo)
          */
         "onCameraSelected"?: (event: CameraSelectionCustomEvent<MediaDeviceInfo>) => void;
@@ -234,6 +246,10 @@ declare namespace LocalJSX {
         "screens"?: string;
     }
     interface SettingsComponent {
+        /**
+          * JSON.stringify() array of cameras
+         */
+        "cameras"?: string;
         /**
           * Re-emits the camera id. This one is only used locally within the browser
          */

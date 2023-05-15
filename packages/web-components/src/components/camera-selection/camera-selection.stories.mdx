@@ -5,7 +5,7 @@ import Props from './readme.md?raw'
 
 <Markdown>{Props}</Markdown>
 
-export const CameraSelection = (args) => `<camera-selection></camera-selection>`;
+export const CameraSelection = (args) => `<camera-selection cameras='${JSON.stringify([{label: 'Camera 1', deviceId: '3l1jdaqwe'}, {label: 'Camera 2', deviceId: '3l1jdaeqw'}])}'></camera-selection>`;
 
 ## CameraSelection
 

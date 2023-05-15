@@ -1,5 +1,4 @@
-import {Component, Event, EventEmitter, h, Host, State} from '@stencil/core';
-import {getDevices} from '../../utils/camera';
+import {Component, Event, EventEmitter, h, Host, Prop} from '@stencil/core';
 
 @Component({
   tag: 'camera-selection',
@@ -13,17 +12,20 @@ export class CameraSelection {
   @Event({eventName: 'cameraSelected'})
   cameraSelected: EventEmitter<MediaDeviceInfo>;
 
-  @State()
-  cameras: MediaDeviceInfo[] = [];
+  /**
+   * JSON.stringify() array of cameras
+   */
+  @Prop()
+  cameras: string = '';
+
+  camerasInfo: MediaDeviceInfo[] = [];
+
+  componentWillRender() {
+    this.camerasInfo = JSON.parse(this.cameras);
+  }
 
   async componentDidLoad() {
-    try {
-      this.cameras = await getDevices();
-      this.cameraSelected.emit(this.cameras[0]);
-    } catch (e) {
-      console.log('There was an error while setting up the camera', e);
-      this.cameraSelected.emit(null);
-    }
+    this.cameraSelected.emit(this.camerasInfo[0]);
   }
 
   render() {
@@ -33,13 +35,13 @@ export class CameraSelection {
           <label>Camera</label>
         </div>
         {
-          this.cameras.length !== 0
+          this.camerasInfo.length !== 0
             ? <div class="input-control">
               <select class="select" onChange={(event: Event) => {
-                const selectedCamera = this.cameras.find(c => c.deviceId === (event.target as HTMLSelectElement).value);
+                const selectedCamera = this.camerasInfo.find(c => c.deviceId === (event.target as HTMLSelectElement).value);
                 this.cameraSelected.emit(selectedCamera);
               }}>
-                {this.cameras.map(camera =>
+                {this.camerasInfo.map(camera =>
                   <option value={camera.deviceId}>
                     {camera.label}
                   </option>
