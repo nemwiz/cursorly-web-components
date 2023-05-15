@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property  | Attribute | Description                       | Type     | Default |
+| --------- | --------- | --------------------------------- | -------- | ------- |
+| `cameras` | `cameras` | JSON.stringify() array of cameras | `string` | `''`    |
+
+
 ## Events
 
 | Event            | Description                                                                                                                                         | Type                           |

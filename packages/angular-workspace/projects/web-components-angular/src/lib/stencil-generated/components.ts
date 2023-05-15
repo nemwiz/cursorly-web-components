@@ -6,133 +6,21 @@ import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
 
 import type { Components } from '@cursorly/web-components/components';
 
-import { defineCustomElement as defineCameraPermission } from '@cursorly/web-components/components/camera-permission.js';
-import { defineCustomElement as defineCameraPermissionDenied } from '@cursorly/web-components/components/camera-permission-denied.js';
-import { defineCustomElement as defineCameraPermissionInfo } from '@cursorly/web-components/components/camera-permission-info.js';
-import { defineCustomElement as defineCameraPermissionPrompt } from '@cursorly/web-components/components/camera-permission-prompt.js';
 import { defineCustomElement as defineCameraSelection } from '@cursorly/web-components/components/camera-selection.js';
 import { defineCustomElement as defineCursorlySpinner } from '@cursorly/web-components/components/cursorly-spinner.js';
 import { defineCustomElement as defineGestureDetector } from '@cursorly/web-components/components/gesture-detector.js';
 import { defineCustomElement as defineScreenSelection } from '@cursorly/web-components/components/screen-selection.js';
 import { defineCustomElement as defineSettingsComponent } from '@cursorly/web-components/components/settings-component.js';
 @ProxyCmp({
-  defineCustomElementFn: defineCameraPermission,
-  inputs: ['docsUrl']
-})
-@Component({
-  selector: 'camera-permission',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['docsUrl'],
-})
-export class CameraPermission {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['permissionGranted']);
-  }
-}
-
-
-export declare interface CameraPermission extends Components.CameraPermission {
-  /**
-   * This event notifies parents components that the user granted permission to use the camera
-   */
-  permissionGranted: EventEmitter<CustomEvent<void>>;
-}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineCameraPermissionDenied,
-  inputs: ['docsUrl']
-})
-@Component({
-  selector: 'camera-permission-denied',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['docsUrl'],
-})
-export class CameraPermissionDenied {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface CameraPermissionDenied extends Components.CameraPermissionDenied {}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineCameraPermissionInfo,
-  inputs: ['docsUrl', 'isFirefox']
-})
-@Component({
-  selector: 'camera-permission-info',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['docsUrl', 'isFirefox'],
-})
-export class CameraPermissionInfo {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['permissionInfoContinued']);
-  }
-}
-
-
-export declare interface CameraPermissionInfo extends Components.CameraPermissionInfo {
-  /**
-   * Emits the event so that the next screen could be shown
-   */
-  permissionInfoContinued: EventEmitter<CustomEvent<void>>;
-}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineCameraPermissionPrompt
-})
-@Component({
-  selector: 'camera-permission-prompt',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class CameraPermissionPrompt {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['cameraPermissionGranted']);
-  }
-}
-
-
-export declare interface CameraPermissionPrompt extends Components.CameraPermissionPrompt {
-  /**
-   * This event notifies parents components that the user granted permission to use the camera
-   */
-  cameraPermissionGranted: EventEmitter<CustomEvent<boolean>>;
-}
-
-
-@ProxyCmp({
-  defineCustomElementFn: defineCameraSelection
+  defineCustomElementFn: defineCameraSelection,
+  inputs: ['cameras']
 })
 @Component({
   selector: 'camera-selection',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
+  inputs: ['cameras'],
 })
 export class CameraSelection {
   protected el: HTMLElement;
@@ -237,14 +125,14 @@ export declare interface ScreenSelection extends Components.ScreenSelection {
 
 @ProxyCmp({
   defineCustomElementFn: defineSettingsComponent,
-  inputs: ['screens']
+  inputs: ['cameras', 'screens']
 })
 @Component({
   selector: 'settings-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['screens'],
+  inputs: ['cameras', 'screens'],
 })
 export class SettingsComponent {
   protected el: HTMLElement;

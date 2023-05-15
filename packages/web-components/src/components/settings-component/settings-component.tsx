@@ -1,6 +1,4 @@
 import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
-import '@mediapipe/drawing_utils';
-import '@mediapipe/hands';
 import {ScreenSettings} from '../../model/screen';
 import {Settings} from '../../model/settings';
 
@@ -31,6 +29,12 @@ export class SettingsComponent {
   @Prop()
   screens: string;
 
+  /**
+   * JSON.stringify() array of cameras
+   */
+  @Prop()
+  cameras: string = '';
+
   selectedCamera: MediaDeviceInfo | undefined;
   selectedScreen: ScreenSettings | undefined;
 
@@ -54,7 +58,7 @@ export class SettingsComponent {
     return (
       <div class="u-flex u-flex-column">
 
-        <camera-selection onCameraSelected={async (event) => {
+        <camera-selection cameras={this.cameras} onCameraSelected={async (event) => {
           this.selectedCamera = event.detail;
           this.cameraChanged.emit(this.selectedCamera.deviceId);
         }
