@@ -1,6 +1,4 @@
 import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
-import '@mediapipe/drawing_utils';
-import '@mediapipe/hands';
 import {ScreenSettings} from '../../model/screen';
 import {Settings} from '../../model/settings';
 
