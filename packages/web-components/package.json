@@ -1,6 +1,6 @@
 {
   "name": "@cursorly/web-components",
-  "version": "0.0.6-alpha.7",
+  "version": "0.0.6-alpha.8",
   "description": "Cursorly web components",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
