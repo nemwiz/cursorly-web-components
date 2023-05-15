@@ -8,10 +8,6 @@ export const config: Config = {
   bundles: [
     {
       components: [
-        'camera-permission',
-        'camera-permission-denied',
-        'camera-permission-info',
-        'camera-permission-prompt',
         'camera-selection',
         'cursorly-spinner',
         'gesture-detector',
