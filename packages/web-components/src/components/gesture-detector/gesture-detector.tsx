@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Listen, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {createGestureRecognizer, createOffscreenCanvas, detectAndGetCoordinates} from './detection.worker';
 import {WebsocketEvent, WebsocketEvents} from '../../model/websocket-message-event';
 import {TouchpadBox} from '../../model/touchpad-box';
@@ -33,16 +33,14 @@ async function detectGesture() {
   this.webcam.style.width = VIDEO_WIDTH;
 
   const cameraFrame = await createImageBitmap(this.webcam);
-  const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox, this.isRunningInBackground);
+  const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox);
 
   if (this.isSocketOpen && coordinates !== null) {
     this.socket.send(coordinates);
   }
 
-  if (!this.isRunningInBackground) {
-    // Call this function again to keep predicting when the browser is ready.
-    this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
-  }
+  // Call this function again to keep predicting when the browser is ready.
+  this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
 
 }
 
@@ -73,14 +71,10 @@ export class GestureDetector {
   @State()
   isStarted: boolean = false;
 
-  @State()
-  isRunningInBackground: boolean = false;
-
   isStreaming: boolean = false;
   webcam!: HTMLVideoElement;
   offscreenCanvas!: HTMLCanvasElement;
   currentVideoStream: MediaStream;
-  mediaRecorder: MediaRecorder;
   animationFrameId: number;
 
   socket: WebSocket;
@@ -93,26 +87,6 @@ export class GestureDetector {
     height: 0,
     isTouchpadBoxOpen: false,
     isCursorStable: false
-  }
-
-  @Listen('visibilitychange', {target: 'window'})
-  async userSwitchedToAnotherTabOrMinimizedTheWindow() {
-    this.isRunningInBackground = document.hidden;
-
-    if (this.isRunningInBackground) {
-      this.mediaRecorder = new MediaRecorder(this.currentVideoStream);
-      this.mediaRecorder.start(60)
-
-      this.mediaRecorder.ondataavailable = () => {
-        if (this.mediaRecorder.state === 'recording' || this.mediaRecorder.state === 'inactive') {
-          detectGesture.apply(this);
-        }
-      }
-    } else {
-      if (this.mediaRecorder) {
-        this.mediaRecorder.stop();
-      }
-    }
   }
 
   async componentDidLoad() {
