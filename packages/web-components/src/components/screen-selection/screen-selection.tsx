@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Host, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Host, Prop, State, Watch} from '@stencil/core';
 import {Screen, ScreenSettings} from '../../model/screen';
 
 @Component({
@@ -24,6 +24,13 @@ export class ScreenSelection {
 
   @State()
   isMultiDisplay: boolean = false;
+
+  @Watch('screens')
+  watchPropHandler(newValue: string) {
+    this.screensInfo = JSON.parse(newValue);
+    this.selectedScreen = this.screensInfo[0];
+    this.emitChanges();
+  }
 
   componentWillRender() {
     this.screensInfo = JSON.parse(this.screens);

@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Host, Prop} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Host, Prop, Watch} from '@stencil/core';
 
 @Component({
   tag: 'camera-selection',
@@ -20,12 +20,14 @@ export class CameraSelection {
 
   camerasInfo: MediaDeviceInfo[] = [];
 
-  componentWillRender() {
-    this.camerasInfo = JSON.parse(this.cameras);
+  @Watch('cameras')
+  watchPropHandler(newValue: string) {
+    this.camerasInfo = JSON.parse(newValue);
+    this.cameraSelected.emit(this.camerasInfo[0]);
   }
 
-  async componentDidLoad() {
-    this.cameraSelected.emit(this.camerasInfo[0]);
+  componentWillRender() {
+    this.camerasInfo = JSON.parse(this.cameras);
   }
 
   render() {
