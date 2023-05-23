@@ -7,7 +7,7 @@ This package hosts web components for [Cursorly](https:///cursorly.app) app.
 ## How to use
 
 The easiest way to is to import via [Unpkg](https://www.unpkg.com/). 
-At the moment we don't support bundling for different frameworks. 
+ 
 
 In your `index.html` file:
 
@@ -26,6 +26,16 @@ In your `index.html` file:
 <body>
 </body>
 </html>
+```
+
+If you want to bundle it with your framework, you can use the following.
+
+- `yarn install @cursorly/web-components`
+- Add this line of code somewhere in your main entry file
+```typescript
+import {defineCustomElements} from '@cursorly/web-components/dist/components/index';
+
+defineCustomElements();
 ```
 
 ### Development
