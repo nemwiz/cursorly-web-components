@@ -38,6 +38,10 @@ import {defineCustomElements} from '@cursorly/web-components/dist/components/ind
 defineCustomElements();
 ```
 
+Once you import the components, you can use them in your HTML.
+
+`<cursorly-spinner></cursorly-spinner>`
+
 ### Development
 
 The web components are built with [StencilJS](https://stenciljs.com).
