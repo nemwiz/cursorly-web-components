@@ -28,9 +28,7 @@ async function detectGesture() {
   }
 
   this.offscreenCanvas.style.height = VIDEO_HEIGHT;
-  this.webcam.style.height = VIDEO_HEIGHT;
   this.offscreenCanvas.style.width = VIDEO_WIDTH;
-  this.webcam.style.width = VIDEO_WIDTH;
 
   const cameraFrame = await createImageBitmap(this.webcam);
   const coordinates = await detectAndGetCoordinates(cameraFrame, this.touchpadBox);
@@ -39,9 +37,8 @@ async function detectGesture() {
     this.socket.send(coordinates);
   }
 
-  // Call this function again to keep predicting when the browser is ready.
-  this.animationFrameId = window.requestAnimationFrame(detectGesture.bind(this));
-
+  // Call this function again to keep predicting when the video frame is ready.
+  this.animationFrameId = this.webcam.requestVideoFrameCallback(detectGesture.bind(this))
 }
 
 @Component({
@@ -147,7 +144,7 @@ export class GestureDetector {
   async disconnectedCallback() {
     this.isStreaming = false;
     this.currentVideoStream.getTracks().forEach(track => track.stop());
-    window.cancelAnimationFrame(this.animationFrameId);
+    this.webcam.cancelVideoFrameCallback(this.animationFrameId);
   }
 
   render() {

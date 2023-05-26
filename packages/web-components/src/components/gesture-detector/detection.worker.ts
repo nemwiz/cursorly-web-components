@@ -28,15 +28,12 @@ export const createGestureRecognizer = async () => {
 
 export const drawToCanvas = (gesture: GestureRecognizerResult, touchpadBox: TouchpadBox) => {
 
-  canvasContext.save();
   canvasContext.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
 
-  if (gesture.landmarks && gesture.landmarks.length !== 0) {
-    canvasContext.fillStyle = CURSOR_POINT_COLOR;
-    const rectangleX = gesture.landmarks[0][INDEX_FINGER_ROOT].x * offscreenCanvas.width;
-    const rectangleY = gesture.landmarks[0][INDEX_FINGER_ROOT].y * offscreenCanvas.height;
-    canvasContext.fillRect(rectangleX, rectangleY, CURSOR_POINT_SIZE, CURSOR_POINT_SIZE);
-  }
+  canvasContext.fillStyle = CURSOR_POINT_COLOR;
+  const rectangleX = gesture.landmarks[0][INDEX_FINGER_ROOT].x * offscreenCanvas.width;
+  const rectangleY = gesture.landmarks[0][INDEX_FINGER_ROOT].y * offscreenCanvas.height;
+  canvasContext.fillRect(rectangleX, rectangleY, CURSOR_POINT_SIZE, CURSOR_POINT_SIZE);
 
   if (touchpadBox.isTouchpadBoxOpen) {
     canvasContext.strokeStyle = touchpadBox.isCursorStable ? TOUCHPAD_BOX_GREEN : TOUCHPAD_BOX_ORANGE;
@@ -44,7 +41,6 @@ export const drawToCanvas = (gesture: GestureRecognizerResult, touchpadBox: Touc
     canvasContext.strokeRect(touchpadBox.x, touchpadBox.y, touchpadBox.width, touchpadBox.height);
   }
 
-  canvasContext.restore();
 }
 
 export const detectAndGetCoordinates = async (cameraFrame: ImageBitmap, touchpadBox: TouchpadBox): Promise<string | null> => {
@@ -53,11 +49,10 @@ export const detectAndGetCoordinates = async (cameraFrame: ImageBitmap, touchpad
   offscreenCanvas.height = VIDEO_HEIGHT_RAW;
   offscreenCanvas.width = VIDEO_WIDTH_RAW;
 
-  requestAnimationFrame(() => {
-    drawToCanvas(gesture, touchpadBox);
-  });
-
   if (gesture.landmarks && gesture.landmarks.length !== 0) {
+
+    drawToCanvas(gesture, touchpadBox);
+
     return JSON.stringify({
       landmarks: gesture.landmarks,
       gestures: gesture.gestures,
