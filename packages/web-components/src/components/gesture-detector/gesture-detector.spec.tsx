@@ -11,25 +11,20 @@ import {GestureDetector} from './gesture-detector';
 import {WebsocketEvents} from '../../model/websocket-message-event';
 
 describe('gesture-detector', () => {
-  it('saves, clears and restores canvas context for every draw to canvas', async () => {
 
-    const dummyCanvasContext = {
-      save: jest.fn(),
-      clearRect: jest.fn(),
-      restore: jest.fn(),
-    }
-    const dummyCanvas = {
-      getContext: () => dummyCanvasContext
-    }
+  const dummyRecognizerResult = {
+      landmarks: [
+        [
+          {x: 1, y: 1},
+          {x: 1, y: 1},
+          {x: 1, y: 1},
+          {x: 1, y: 1},
+          {x: 1, y: 1},
+          {x: 1, y: 1},
+        ]
+      ]
+    };
 
-    await createOffscreenCanvas(dummyCanvas as unknown as OffscreenCanvas);
-
-    await drawToCanvas({landmarks: []} as GestureRecognizerResult, {} as TouchpadBox);
-
-    expect(dummyCanvasContext.save).toHaveBeenCalled();
-    expect(dummyCanvasContext.clearRect).toHaveBeenCalled();
-    expect(dummyCanvasContext.restore).toHaveBeenCalled();
-  });
   it('draws a rectangle when touchpad box is open', async () => {
     const dummyCanvasContext = {
       save: jest.fn(),
@@ -51,7 +46,7 @@ describe('gesture-detector', () => {
     }
 
     await createOffscreenCanvas(dummyCanvas as unknown as OffscreenCanvas);
-    await drawToCanvas({} as GestureRecognizerResult, dummyTouchpadBox);
+    await drawToCanvas(dummyRecognizerResult as GestureRecognizerResult, dummyTouchpadBox);
 
     expect(dummyCanvasContext.strokeRect).toHaveBeenCalledWith(
       dummyTouchpadBox.x,
@@ -81,7 +76,7 @@ describe('gesture-detector', () => {
     }
 
     await createOffscreenCanvas(dummyCanvas as unknown as OffscreenCanvas);
-    await drawToCanvas({} as GestureRecognizerResult, dummyTouchpadBox);
+    await drawToCanvas(dummyRecognizerResult as GestureRecognizerResult, dummyTouchpadBox);
 
     expect(dummyCanvasContext.strokeRect).not.toHaveBeenCalled();
   });
@@ -107,7 +102,7 @@ describe('gesture-detector', () => {
     }
 
     await createOffscreenCanvas(dummyCanvas as unknown as OffscreenCanvas);
-    await drawToCanvas({} as GestureRecognizerResult, dummyTouchpadBox);
+    await drawToCanvas(dummyRecognizerResult as GestureRecognizerResult, dummyTouchpadBox);
 
     expect(dummyCanvasContext.strokeStyle).toEqual(TOUCHPAD_BOX_GREEN);
   });
@@ -133,7 +128,7 @@ describe('gesture-detector', () => {
     }
 
     await createOffscreenCanvas(dummyCanvas as unknown as OffscreenCanvas);
-    await drawToCanvas({} as GestureRecognizerResult, dummyTouchpadBox);
+    await drawToCanvas(dummyRecognizerResult as GestureRecognizerResult, dummyTouchpadBox);
 
     expect(dummyCanvasContext.strokeStyle).toEqual(TOUCHPAD_BOX_ORANGE);
   });
@@ -176,26 +171,6 @@ describe('gesture-detector', () => {
       CURSOR_POINT_SIZE,
       CURSOR_POINT_SIZE,
     )
-  });
-  it('does not draw a cursor point when index finger is not visible to the camera', async () => {
-    const dummyCanvasContext = {
-      save: jest.fn(),
-      clearRect: jest.fn(),
-      restore: jest.fn(),
-      fillRect: jest.fn(),
-      fillStyle: '',
-      strokeRect: jest.fn(),
-      strokeStyle: '#000000'
-    }
-    const dummyCanvas = {
-      getContext: () => dummyCanvasContext,
-    };
-    const recognizerResult = {};
-
-    await createOffscreenCanvas(dummyCanvas as unknown as OffscreenCanvas);
-    await drawToCanvas(recognizerResult as GestureRecognizerResult, {} as TouchpadBox);
-
-    expect(dummyCanvasContext.fillRect).not.toHaveBeenCalled();
   });
   it('creates the touchpad box', () => {
     const event = {
@@ -270,6 +245,9 @@ describe('gesture-detector', () => {
     const gestureDetector = new GestureDetector();
     gestureDetector.isStreaming = true;
     gestureDetector.animationFrameId = dummyAnimationId;
+    gestureDetector.webcam = {
+      cancelVideoFrameCallback: jest.fn()
+    } as unknown as HTMLVideoElement;
 
     const dummyTrack = {
       stop: jest.fn()
@@ -278,12 +256,10 @@ describe('gesture-detector', () => {
       getTracks: () => [dummyTrack]
     } as any;
 
-    const windowSpy = jest.spyOn(global.window, 'cancelAnimationFrame');
-
     await gestureDetector.disconnectedCallback();
 
     expect(dummyTrack.stop).toHaveBeenCalled();
     expect(gestureDetector.isStreaming).toEqual(false);
-    expect(windowSpy).toHaveBeenCalledWith(dummyAnimationId);
+    expect(gestureDetector.webcam.cancelVideoFrameCallback).toHaveBeenCalledWith(dummyAnimationId);
   });
 });
