@@ -18,33 +18,35 @@
     "start": "lerna run start --scope @cursorly/web-components",
     "storybook": "storybook dev -p 6006 --no-open",
     "test": "lerna run test --scope @cursorly/web-components",
-    "check:updates": "lerna exec npx npm-check-updates --stream --scope @cursorly/web-components"
+    "check:updates": "ncu && lerna exec ncu --stream --scope @cursorly/web-components"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^7.0.11",
-    "@storybook/addon-docs": "^7.0.11",
-    "@storybook/addon-essentials": "^7.0.11",
-    "@storybook/addon-interactions": "^7.0.11",
-    "@storybook/addon-links": "^7.0.11",
-    "@storybook/addon-mdx-gfm": "7.0.11",
-    "@storybook/blocks": "^7.0.11",
-    "@storybook/html": "^7.0.11",
-    "@storybook/html-vite": "7.0.11",
+    "@storybook/addon-actions": "^7.0.18",
+    "@storybook/addon-docs": "^7.0.18",
+    "@storybook/addon-essentials": "^7.0.18",
+    "@storybook/addon-interactions": "^7.0.18",
+    "@storybook/addon-links": "^7.0.18",
+    "@storybook/addon-mdx-gfm": "7.0.18",
+    "@storybook/blocks": "^7.0.18",
+    "@storybook/html": "^7.0.18",
+    "@storybook/html-vite": "7.0.18",
     "cirrus-ui": "^0.7.1",
-    "lerna": "^6.6.1",
+    "npm-check-updates": "^16.10.12",
+    "lerna": "^6.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "7.0.11",
+    "storybook": "7.0.18",
     "storybook-addon-themes": "^6.1.0",
-    "vite": "^4.2.2"
+    "vite": "^4.3.9"
   },
   "peerDependencies": {},
   "volta": {
-    "node": "16.20.0",
-    "yarn": "1.22.19"
+    "node": "18.16.0",
+    "yarn": "1.22.19",
+    "npm": "9.6.7"
   }
 }
