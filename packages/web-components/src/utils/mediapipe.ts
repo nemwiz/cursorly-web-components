@@ -2,7 +2,7 @@ import {FilesetResolver, GestureRecognizer} from '@mediapipe/tasks-vision';
 
 export const createRecognizer = async (): Promise<GestureRecognizer> => {
   const vision = await FilesetResolver.forVisionTasks(
-    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
   );
   return await GestureRecognizer.createFromOptions(vision, {
     baseOptions: {
