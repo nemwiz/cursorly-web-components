@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "0.10.0",
-    "@stencil/core": "^3.3.0"
+    "@stencil/core": "^4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
