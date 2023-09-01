@@ -33,7 +33,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@mediapipe/tasks-vision": "0.10.0",
+    "@mediapipe/tasks-vision": "0.10.4",
     "@stencil/core": "^3.3.0"
   },
   "devDependencies": {
