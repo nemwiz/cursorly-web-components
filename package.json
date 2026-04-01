@@ -34,7 +34,7 @@
     "@storybook/blocks": "^7.0.18",
     "@storybook/html": "^7.0.18",
     "@storybook/html-vite": "7.0.18",
-    "cirrus-ui": "^0.7.1",
+    "cirrus-ui": "^0.8.0",
     "npm-check-updates": "^16.10.12",
     "lerna": "^6.6.2",
     "react": "^18.2.0",
