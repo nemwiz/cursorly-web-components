@@ -36,7 +36,7 @@
     "@storybook/html-vite": "7.0.18",
     "cirrus-ui": "^0.7.1",
     "npm-check-updates": "^16.10.12",
-    "lerna": "^6.6.2",
+    "lerna": "^9.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "7.0.18",
